@@ -2,7 +2,7 @@
 @layer tokens {
   :root {
     --theme-assets-loaded: 1;
-    --color-background: #fafaf8;
+    --color-background: #f8ecec;
     --color-surface: #ffffff;
     --color-text: #1c1c1c;
     --color-muted: #666666;
