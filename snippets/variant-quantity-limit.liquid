@@ -1,0 +1,24 @@
+{%- doc -%}
+  Outputs the total purchasable quantity limit, or blank when unlimited.
+  Respects availability, quantity rules, and tracked inventory that denies overselling.
+
+  @param {variant} variant - The variant whose limit should be calculated
+{%- enddoc -%}
+{%- liquid
+  assign quantity_limit = variant.quantity_rule.max
+  if variant.inventory_management != blank
+    if variant.inventory_policy == 'deny'
+      if quantity_limit == blank
+        assign quantity_limit = variant.inventory_quantity
+      else
+        assign quantity_limit = quantity_limit | at_most: variant.inventory_quantity
+      endif
+    endif
+  endif
+  unless variant.available
+    assign quantity_limit = 0
+  endunless
+  if quantity_limit != blank
+    echo quantity_limit | at_least: 0
+  endif
+-%}

@@ -1,0 +1,102 @@
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    background: var(--color-background);
+    color: var(--color-text);
+  }
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-heading);
+    font-weight: var(--weight-heading);
+    line-height: var(--leading-heading);
+    text-wrap: balance;
+  }
+  h1 {
+    font-size: var(--text-title);
+    letter-spacing: -0.035em;
+  }
+  h2 {
+    font-size: var(--text-heading);
+    letter-spacing: -0.025em;
+  }
+  h3 {
+    font-size: 1.25rem;
+  }
+  :where(h4, h5, h6) {
+    font-size: 1rem;
+  }
+  :where(p, h1, h2, h3, h4, h5, h6, a, dd) {
+    overflow-wrap: anywhere;
+  }
+  a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+  :focus-visible {
+    outline: var(--focus-width) solid var(--color-accent);
+    outline-offset: 4px;
+  }
+  :where(button, input, select, textarea):disabled,
+  [aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .site-main > .shopify-section {
+    padding-block: var(--section-space);
+    row-gap: var(--space-6);
+  }
+  .site-main > .shopify-section + .shopify-section {
+    padding-top: 0;
+  }
+  :is(.rte, .shopify-policy__body) {
+    max-width: var(--reading-width);
+  }
+  :is(.rte, .shopify-policy__body) > * + * {
+    margin-block-start: var(--space-4);
+  }
+  :is(.rte, .shopify-policy__body) :where(h2, h3) {
+    margin-block-start: var(--space-7);
+  }
+  :is(.rte, .shopify-policy__body) :where(ul, ol) {
+    padding-inline-start: 1.5em;
+  }
+  :is(.rte, .shopify-policy__body) :where(blockquote) {
+    border-inline-start: 2px solid var(--color-border);
+    padding-inline-start: var(--space-5);
+    color: var(--color-muted);
+  }
+  :is(.rte, .shopify-policy__body) table {
+    display: block;
+    overflow-x: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --transition-duration: 0ms;
+    }
+  }
+}
+
+/* Shopify supplies unlayered styles for its native policy wrapper. */
+.site-main .shopify-policy__container {
+  width: calc(100% - 2 * var(--page-margin));
+  max-width: var(--reading-width);
+  margin-inline: auto;
+  padding: var(--section-space) 0;
+}
+
+.site-main .shopify-policy__title {
+  margin-block-end: var(--space-6);
+  text-align: start;
+}

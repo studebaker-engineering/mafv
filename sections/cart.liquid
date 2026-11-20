@@ -1,0 +1,258 @@
+{% comment %}
+  This section is used in the cart template to render /cart page with an
+  overview of the items in customer's cart.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
+{% endcomment %}
+
+<h1>{{ 'cart.title' | t }}</h1>
+
+{% if cart.empty? %}
+  <p>{{ 'cart.empty' | t }}</p>
+  <a href="{{ routes.all_products_collection_url }}">{{ 'cart.continue_shopping' | t }}</a>
+{% else %}
+  <form action="{{ routes.cart_url }}" method="post" class="cart-form" data-cart-quantity-form>
+    <div class="cart-table-scroll" role="region" aria-label="{{ 'cart.items' | t }}" tabindex="0">
+      <table class="cart-table">
+        <caption>{{ 'cart.items' | t }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ 'cart.product' | t }}</th>
+            <th scope="col">{{ 'commerce.price' | t }}</th>
+            <th scope="col">{{ 'commerce.quantity' | t }}</th>
+            <th scope="col">{{ 'cart.line_total' | t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr>
+              <th scope="row">
+                {% if item.image %}
+                  <a href="{{ item.url }}" aria-label="{{ item.product.title | default: item.title | escape }}">
+                    {% render 'image', image: item.image, width: 200 %}
+                  </a>
+                {% endif %}
+                <a href="{{ item.url }}">{{ item.product.title | default: item.title | escape }}</a>
+                {% assign variant_title = item.variant.title | default: item.variant_title %}
+                {% if variant_title != blank %}
+                  {% unless variant_title == 'Default Title' %}
+                    <p>{{ 'commerce.variant' | t }}: {{ variant_title | escape }}</p>
+                  {% endunless %}
+                {% endif %}
+                {% if item.selling_plan_allocation %}
+                  <p>{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>
+                {% endif %}
+                {% for property in item.properties %}
+                  {% assign property_first_character = property.first | slice: 0 %}
+                  {% unless property_first_character == '_' %}
+                    {% if property.last != blank %}
+                      <dl>
+                        <dt>{{ property.first | escape }}</dt>
+                        <dd>
+                          {{ property.last | escape }}
+                        </dd>
+                      </dl>
+                    {% endif %}
+                  {% endunless %}
+                {% endfor %}
+                <a
+                  href="{{ item.url_to_remove }}"
+                  aria-label="{{ 'cart.remove_item' | t: item: item.title | escape }}"
+                >{{ 'cart.remove' | t }}</a>
+              </th>
+              <td>
+                {% if item.original_price != item.final_price %}
+                  <p>{{ 'commerce.original_price' | t }}: <s>{{ item.original_price | money }}</s></p>
+                  <p>{{ 'commerce.sale_price' | t }}: {{ item.final_price | money }}</p>
+                {% else %}
+                  {{ item.final_price | money }}
+                {% endif %}
+                {% if item.unit_price_measurement %}
+                  <p>{{ 'commerce.unit_price' | t }}: {{ item.unit_price | unit_price_with_measurement: item.unit_price_measurement }}</p>
+                {% endif %}
+              </td>
+              <td>
+                {% liquid
+                  capture quantity_limit
+                    render 'variant-quantity-limit', variant: item.variant
+                  endcapture
+                  assign quantity_limit = quantity_limit | strip
+                  assign variant_quantity_limit = quantity_limit
+                  assign variant_cart_quantity = cart | item_count_for_variant: item.variant_id
+                  assign other_line_quantity = variant_cart_quantity | minus: item.quantity
+                  if quantity_limit != blank
+                    assign quantity_limit = quantity_limit | minus: other_line_quantity | at_least: 0
+                  endif
+                %}
+                <label for="CartQuantity-{{ section.id }}-{{ forloop.index }}">
+                  {{ 'cart.quantity_for' | t: item: item.title | escape }}
+                </label>
+                <input
+                  id="CartQuantity-{{ section.id }}-{{ forloop.index }}"
+                  type="number"
+                  name="updates[]"
+                  min="0"
+                  step="1"
+                  {% if quantity_limit != blank %}max="{{ quantity_limit }}"{% endif %}
+                  value="{{ item.quantity }}"
+                  data-quantity-variant="{{ item.variant_id }}"
+                  data-quantity-limit="{{ variant_quantity_limit }}"
+                  data-quantity-minimum="{{ item.variant.quantity_rule.min | default: 1 }}"
+                  data-quantity-increment="{{ item.variant.quantity_rule.increment | default: 1 }}"
+                  data-quantity-rule-error="{{ 'commerce.quantity_cart_rule_error' | t: minimum: item.variant.quantity_rule.min, increment: item.variant.quantity_rule.increment | escape }}"
+                  data-quantity-limit-error="{{ 'commerce.quantity_cart_limit_error' | t: quantity: variant_quantity_limit | escape }}"
+                  aria-describedby="CartQuantityHelp-{{ section.id }}-{{ forloop.index }}"
+                  required
+                >
+                <p id="CartQuantityHelp-{{ section.id }}-{{ forloop.index }}">
+                  {% if quantity_limit != blank %}
+                    {{ 'commerce.quantity_maximum_cart' | t: quantity: quantity_limit }}
+                  {% endif %}
+                  {{ 'cart.quantity_remove' | t }}
+                </p>
+              </td>
+              <td>
+                {% if item.original_line_price != item.final_line_price %}
+                  <p>{{ 'commerce.original_price' | t }}: <s>{{ item.original_line_price | money }}</s></p>
+                  <p>{{ 'commerce.sale_price' | t }}: {{ item.final_line_price | money }}</p>
+                {% else %}
+                  {{ item.final_line_price | money }}
+                {% endif %}
+                {% for discount in item.line_level_discount_allocations %}
+                  <p>{{ discount.discount_application.title | escape }}: -{{ discount.amount | money }}</p>
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="cart-summary">
+
+      <dl>
+        <dt>{{ 'cart.subtotal' | t }}</dt>
+        <dd>{{ cart.items_subtotal_price | money_with_currency }}</dd>
+        {% for discount in cart.cart_level_discount_applications %}
+          <dt>{{ 'cart.discount' | t }}: {{ discount.title | escape }}</dt>
+          <dd>-{{ discount.total_allocated_amount | money_with_currency }}</dd>
+        {% endfor %}
+        <dt>{{ 'cart.total' | t }}</dt>
+        <dd>{{ cart.total_price | money_with_currency }}</dd>
+      </dl>
+      {% if cart.taxes_included %}
+        <p>{{ 'cart.taxes_included_shipping' | t }}</p>
+      {% else %}
+        <p>{{ 'cart.taxes_shipping' | t }}</p>
+      {% endif %}
+      <div class="cart-actions">
+        <button type="submit" name="update">{{ 'cart.update' | t }}</button>
+        <button type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
+      </div>
+    </div>
+  </form>
+{% endif %}
+
+{% stylesheet %}
+  @layer sections {
+    .cart-form {
+      display: grid;
+      gap: var(--space-6);
+    }
+    .cart-table-scroll {
+      overflow-x: auto;
+    }
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: start;
+      font-size: var(--text-small);
+    }
+    .cart-table caption {
+      text-align: start;
+      padding-bottom: var(--space-4);
+      color: var(--color-muted);
+    }
+    .cart-table :where(th, td) {
+      padding: var(--space-5) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+      text-align: start;
+    }
+    .cart-table thead th {
+      font-weight: 500;
+      color: var(--color-muted);
+    }
+    .cart-table th[scope="row"] {
+      min-width: 12rem;
+      font-weight: 400;
+    }
+    .cart-table th[scope="row"] > * + * {
+      margin-top: var(--space-2);
+    }
+    .cart-table th .image {
+      width: 6rem;
+      margin-bottom: var(--space-3);
+      background: var(--color-surface);
+    }
+    .cart-table td {
+      min-width: 8rem;
+    }
+    .cart-table td:has(input) {
+      min-width: 12rem;
+    }
+    .cart-table label {
+      font-weight: 400;
+    }
+    .cart-table input {
+      width: 5.5rem;
+      margin-block: var(--space-2);
+    }
+    .cart-table p {
+      color: var(--color-muted);
+    }
+    .cart-summary {
+      width: min(100%, 26rem);
+      justify-self: end;
+      display: grid;
+      gap: var(--space-5);
+    }
+    .cart-summary dl {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-3);
+    }
+    .cart-summary dd {
+      text-align: end;
+    }
+    .cart-summary dt:last-of-type,
+    .cart-summary dd:last-of-type {
+      font-weight: 600;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-border);
+    }
+    .cart-summary > p {
+      font-size: var(--text-small);
+      color: var(--color-muted);
+    }
+    .cart-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .cart-actions button {
+      flex: 1;
+    }
+    .cart-actions [name="update"] {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border-color: var(--color-border);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.cart",
+  "settings": []
+}
+{% endschema %}

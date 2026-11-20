@@ -1,0 +1,97 @@
+{
+  "404": {
+    "title": "404",
+    "not_found": "Page not found.",
+    "back_to_shopping": "Back to shopping"
+  },
+  "blog": {
+    "article_comments": "Comments",
+    "article_metadata_html": "{{ date }} by {{ author }}",
+    "comment_form_body": "Comment",
+    "comment_form_email": "Email",
+    "comment_form_name": "Name",
+    "comment_form_submit": "Post",
+    "comment_form_title": "Add a comment"
+  },
+  "cart": {
+    "checkout": "Checkout",
+    "title": "Cart",
+    "update": "Update",
+    "remove": "Remove",
+    "empty": "Your cart is empty.",
+    "continue_shopping": "Continue shopping",
+    "items": "Cart items",
+    "product": "Product",
+    "line_total": "Total",
+    "quantity_for": "Quantity for {{ item }}",
+    "remove_item": "Remove {{ item }}",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "total": "Estimated total",
+    "taxes_shipping": "Taxes and shipping are calculated at checkout.",
+    "taxes_included_shipping": "Taxes included. Shipping is calculated at checkout.",
+    "quantity_remove": "Set quantity to 0 to remove this item."
+  },
+  "customers": {
+    "login": {
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "title": "Login"
+    }
+  },
+  "collections": {
+    "title": "Collections",
+    "empty": "No products found.",
+    "pagination": "Collection pages"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Add to Apple Wallet",
+    "card": "Gift card",
+    "expired": "This gift card has expired",
+    "expires_on": "Expires on {{ expires_on }}",
+    "use_at_checkout": "Use this gift card at checkout"
+  },
+  "password": {
+    "title": "This shop is private",
+    "password": "Password",
+    "enter": "Enter"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search articles, pages, or products",
+    "submit": "Search",
+    "no_results_html": "No results found for {{ terms }}",
+    "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "commerce": {
+    "price": "Price",
+    "price_range": "{{ minimum }}–{{ maximum }}",
+    "original_price": "Original price",
+    "sale_price": "Sale price",
+    "unit_price": "Unit price",
+    "sold_out": "Sold out",
+    "quantity": "Quantity",
+    "variant": "Variant",
+    "add_to_cart": "Add to cart",
+    "select_variant": "Select variant",
+    "quantity_rules": "Minimum: {{ minimum }}. Increments of {{ increment }}.",
+    "quantity_maximum_add": "You can add up to {{ quantity }} more.",
+    "quantity_maximum_cart": "Maximum for this line: {{ quantity }}.",
+    "quantity_limit_reached": "No more units of this variant can be added to your cart.",
+    "variant_reload": "Changing the variant reloads this page to update availability and quantity limits. Without JavaScript, use Select variant.",
+    "quantity_cart_rule_error": "The total quantity of this variant must be at least {{ minimum }} and a multiple of {{ increment }}, or 0 to remove it.",
+    "quantity_cart_limit_error": "You can have at most {{ quantity }} of this variant in your cart."
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "footer_navigation": "Footer navigation",
+    "main_navigation": "Main navigation",
+    "account": "Account"
+  },
+  "home": {
+    "title": "Studebaker Engineering",
+    "description": "Sandbox mode",
+    "shop": "Go to collections"
+  }
+}

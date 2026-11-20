@@ -1,0 +1,9 @@
+{% doc %}
+  Loads the shared storefront and password assets.
+{% enddoc %}
+
+{{ 'tokens.css' | asset_url | stylesheet_tag }}
+{{ 'base.css' | asset_url | stylesheet_tag }}
+{{ 'components.css' | asset_url | stylesheet_tag }}
+{{ 'utilities.css' | asset_url | stylesheet_tag }}
+<script type="module" src="{{ 'theme.js' | asset_url }}"></script>

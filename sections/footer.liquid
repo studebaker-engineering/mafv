@@ -1,0 +1,74 @@
+<footer class="site-footer">
+  <div class="footer__copyright">
+    &copy;
+    {{ 'now' | date: '%Y' }}
+    <a href="{{ routes.root_url }}">{{ shop.name | escape }}</a>, {{ powered_by_link }}
+  </div>
+
+  {% if section.settings.menu.links != blank %}
+    <nav class="footer__links" aria-label="{{ 'accessibility.footer_navigation' | t }}">
+      {% for link in section.settings.menu.links %}
+        <a href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+      {% endfor %}
+    </nav>
+  {% endif %}
+
+  <div class="footer__payment">
+    {% if section.settings.show_payment_icons %}
+      {% for type in shop.enabled_payment_types %}
+        {{ type | payment_type_svg_tag }}
+      {% endfor %}
+    {% endif %}
+  </div>
+</footer>
+
+{% stylesheet %}
+  @layer sections {
+    .site-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      justify-content: space-between;
+      gap: var(--space-6);
+      padding-block: var(--space-7);
+      border-top: 1px solid var(--color-border);
+      font-size: var(--text-small);
+      color: var(--color-muted);
+    }
+    .footer__links,
+    .footer__payment {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .footer__links a {
+      display: inline-flex;
+      min-height: var(--control-height);
+      align-items: center;
+    }
+    .footer__payment svg {
+      width: 2.25rem;
+      height: auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.footer",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:labels.menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "t:labels.show_payment_icons",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

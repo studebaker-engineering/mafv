@@ -1,0 +1,27 @@
+<div class="store-intro">
+  <p class="store-intro__name">{{ shop.name | escape }}</p>
+  <h1>{{ 'home.title' | t }}</h1>
+  <p>{{ 'home.description' | t }}</p>
+  <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'home.shop' | t }}</a>
+</div>
+{% stylesheet %}
+  @layer sections {
+    .store-intro {
+      padding-block: var(--section-space);
+      max-width: var(--reading-width);
+    }
+    .store-intro > * + * {
+      margin-top: var(--space-5);
+    }
+    .store-intro__name {
+      color: var(--color-muted);
+      font-size: var(--text-small);
+    }
+    .store-intro .button {
+      margin-top: var(--space-7);
+    }
+  }
+{% endstylesheet %}
+{% schema %}
+{ "name": "t:general.store_intro", "settings": [], "presets": [{ "name": "t:general.store_intro" }] }
+{% endschema %}

@@ -1,0 +1,83 @@
+/* Handwritten shell and reset; loaded before compiled and Shopify section CSS. */
+@layer reset, tokens, base, components, sections, utilities;
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd {
+    margin: 0;
+  }
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+  img,
+  video {
+    height: auto;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+  button,
+  select {
+    text-transform: none;
+  }
+  textarea {
+    resize: vertical;
+  }
+  [hidden] {
+    /* Keep hidden controls hidden when component styles set display. */
+    display: none !important;
+  }
+}
+@layer base {
+  body {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+  }
+  .site-main {
+    flex: 1;
+    min-width: 0;
+  }
+  .shopify-section {
+    --content-width: min(
+      calc(var(--page-width) - var(--page-margin) * 2),
+      calc(100% - var(--page-margin) * 2)
+    );
+    --content-margin: minmax(var(--page-margin), 1fr);
+    --content-grid: var(--content-margin) minmax(0, var(--content-width))
+      var(--content-margin);
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    position: relative;
+    width: 100%;
+  }
+  .shopify-section > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .shopify-section > .full-width {
+    grid-column: 1 / -1;
+  }
+}

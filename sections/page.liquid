@@ -1,0 +1,27 @@
+<article class="content-page">
+  <h1>{{ page.title | escape }}</h1>
+
+  {% if page.content != blank %}
+    <div class="rte">{{ page.content }}</div>
+  {% endif %}
+</article>
+
+{% stylesheet %}
+  @layer sections {
+    .content-page {
+      width: min(100%, var(--reading-width));
+      margin-inline: auto;
+    }
+
+    .content-page > .rte {
+      margin-block-start: var(--space-6);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.page",
+  "settings": []
+}
+{% endschema %}

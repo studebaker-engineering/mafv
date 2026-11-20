@@ -1,0 +1,185 @@
+{% comment %}
+  This section is used in the product template to render product page with
+  media, content, and add-to-cart form.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+{% endcomment %}
+
+<div class="product-layout">
+  <div class="product-images">
+    {% for image in product.images %}
+      {% render 'image', class: 'product-image', image: image %}
+    {% endfor %}
+  </div>
+
+  <div class="product-details">
+    <div class="product-info">
+      <h1>{{ product.title | escape }}</h1>
+      <p>
+        {{ 'commerce.price' | t }}:
+        {% if product.price_varies %}
+          {% assign minimum_price = product.price_min | money %}
+          {% assign maximum_price = product.price_max | money %}
+          {{ 'commerce.price_range' | t: minimum: minimum_price, maximum: maximum_price }}
+        {% else %}
+          {{ product.price | money }}
+        {% endif %}
+      </p>
+      {% unless product.available %}
+        <p>{{ 'commerce.sold_out' | t }}</p>
+      {% endunless %}
+      <div class="rte">{{ product.description }}</div>
+    </div>
+
+    <div class="product-form">
+      {% liquid
+        assign current_variant = product.selected_or_first_available_variant
+        assign cart_quantity = cart | item_count_for_variant: current_variant.id
+        assign quantity_increment = current_variant.quantity_rule.increment | default: 1
+        assign quantity_minimum = current_variant.quantity_rule.min | default: 1
+        if cart_quantity > 0
+          assign quantity_minimum = quantity_minimum | minus: cart_quantity | at_least: quantity_increment
+        endif
+        capture quantity_limit
+          render 'variant-quantity-limit', variant: current_variant
+        endcapture
+        assign quantity_limit = quantity_limit | strip
+        assign can_add = current_variant.available
+        if quantity_limit != blank
+          assign quantity_limit = quantity_limit | minus: cart_quantity | at_least: 0
+          if quantity_limit < quantity_minimum
+            assign can_add = false
+          endif
+        endif
+      %}
+      <form action="{{ product.url }}" method="get" data-variant-form>
+        <label for="ProductVariant-{{ section.id }}">{{ 'commerce.variant' | t }}</label>
+        <select id="ProductVariant-{{ section.id }}" name="variant" data-variant-selector aria-describedby="ProductVariantHelp-{{ section.id }}">
+          {% for variant in product.variants %}
+            <option
+              value="{{ variant.id }}"
+              {% if variant == current_variant %}
+                selected="selected"
+              {% endif %}
+            >
+              {{ variant.title | escape }} - {{ variant.price | money }}
+              {% unless variant.available %} - {{ 'commerce.sold_out' | t }}{% endunless %}
+            </option>
+          {% endfor %}
+        </select>
+        <p id="ProductVariantHelp-{{ section.id }}">{{ 'commerce.variant_reload' | t }}</p>
+        <button type="submit" data-variant-submit>{{ 'commerce.select_variant' | t }}</button>
+      </form>
+
+      {% form 'product', product %}
+        {{ form.errors | default_errors }}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+        <label for="ProductQuantity-{{ section.id }}">{{ 'commerce.quantity' | t }}</label>
+        <input
+          id="ProductQuantity-{{ section.id }}"
+          type="number"
+          name="quantity"
+          min="{{ quantity_minimum }}"
+          step="{{ quantity_increment }}"
+          value="{{ quantity_minimum }}"
+          {% if quantity_limit != blank %}max="{{ quantity_limit }}"{% endif %}
+          aria-describedby="ProductQuantityHelp-{{ section.id }}"
+          required
+          {% unless can_add %}disabled{% endunless %}
+        >
+        <p id="ProductQuantityHelp-{{ section.id }}">
+          {% if can_add %}
+            {{ 'commerce.quantity_rules' | t: minimum: quantity_minimum, increment: quantity_increment }}
+            {% if quantity_limit != blank %}
+              {{ 'commerce.quantity_maximum_add' | t: quantity: quantity_limit }}
+            {% endif %}
+          {% else %}
+            {% if current_variant.available %}
+              {{ 'commerce.quantity_limit_reached' | t }}
+            {% else %}
+              {{ 'commerce.sold_out' | t }}
+            {% endif %}
+          {% endif %}
+        </p>
+
+        <button type="submit" name="add" {% unless can_add %}disabled{% endunless %}>
+          {% if product.available %}
+            {{ 'commerce.add_to_cart' | t }}
+          {% else %}
+            {{ 'commerce.sold_out' | t }}
+          {% endif %}
+        </button>
+        {% if can_add %}
+          {{ form | payment_button }}
+        {% endif %}
+      {% endform %}
+    </div>
+
+  </div>
+</div>
+
+{% stylesheet %}
+  @layer sections {
+    .product-layout {
+      display: grid;
+      gap: var(--space-7);
+      align-items: start;
+    }
+    .product-images {
+      display: grid;
+      gap: var(--space-4);
+    }
+    .product-image {
+      background: var(--color-surface);
+    }
+    .product-details,
+    .product-info,
+    .product-form {
+      display: grid;
+      gap: var(--space-5);
+      min-width: 0;
+    }
+    .product-info > p {
+      color: var(--color-muted);
+    }
+    .product-form form {
+      display: grid;
+      gap: var(--space-3);
+    }
+    .product-form form + form {
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--color-border);
+    }
+    .product-form p {
+      font-size: var(--text-small);
+      color: var(--color-muted);
+    }
+    .product-form input[type="number"] {
+      width: 6rem;
+    }
+    .product-form [name="add"] {
+      width: 100%;
+      margin-top: var(--space-3);
+    }
+    .product-form [data-variant-submit] {
+      justify-self: start;
+    }
+    @media (min-width: 52rem) {
+      .product-layout {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: var(--space-8);
+      }
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.product",
+  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,124 @@
+<header class="site-header">
+  <a class="header__brand" href="{{ routes.root_url }}">
+    {%- if settings.logo != blank -%}
+      {{ settings.logo | image_url: width: 480 | image_tag: widths: '120, 160, 240, 320, 480', sizes: '(max-width: 40rem) 7.5rem, 10rem', alt: shop.name }}
+    {%- else -%}
+      {{ shop.name | escape }}
+    {%- endif -%}
+  </a>
+
+  {% if section.settings.menu.links != blank %}
+    <nav class="header__menu" aria-label="{{ 'accessibility.main_navigation' | t }}">
+      {% for link in section.settings.menu.links %}
+        <a href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+      {% endfor %}
+    </nav>
+  {% endif %}
+
+  <div class="header__icons">
+    {% if shop.customer_accounts_enabled %}
+      <a href="{{ routes.account_url }}" aria-label="{{ 'accessibility.account' | t }}">{{ 'icon-account.svg' | inline_asset_content }}</a>
+    {% endif %}
+
+    <a href="{{ routes.cart_url }}" aria-label="{{ 'cart.title' | t }}">
+      {% if cart.item_count > 0 %}
+        <sup>{{ cart.item_count }}</sup>
+      {% endif %}
+
+      {{ 'icon-cart.svg' | inline_asset_content }}
+    </a>
+  </div>
+</header>
+
+{% stylesheet %}
+  @layer sections {
+    .site-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-5);
+      padding-block: var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header__brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      min-height: var(--control-height);
+      max-width: 100%;
+      margin-inline-end: auto;
+      overflow-wrap: anywhere;
+      font-family: var(--font-heading);
+      font-weight: var(--weight-heading);
+      font-size: 1.25rem;
+      letter-spacing: -0.025em;
+    }
+    .header__brand img {
+      width: auto;
+      height: auto;
+      max-width: min(100%, 10rem);
+      max-height: 3rem;
+    }
+    .site-header a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .site-header a:hover {
+      text-decoration: underline;
+    }
+    .header__menu,
+    .header__icons {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .header__menu a,
+    .header__icons a {
+      min-height: var(--control-height);
+      display: inline-flex;
+      align-items: center;
+    }
+    .header__menu {
+      font-size: var(--text-small);
+    }
+    .header__icons a {
+      position: relative;
+      gap: var(--space-1);
+      min-width: var(--control-height);
+      justify-content: center;
+    }
+    .header__icons svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+    .header__icons sup {
+      font-size: 0.75rem;
+    }
+    @media (max-width: 40rem) {
+      .header__brand img {
+        max-width: min(100%, 7.5rem);
+        max-height: 2.5rem;
+      }
+      .header__menu {
+        order: 3;
+        width: 100%;
+        border-top: 1px solid var(--color-border);
+        padding-top: var(--space-2);
+      }
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:labels.menu"
+    }
+  ]
+}
+{% endschema %}
