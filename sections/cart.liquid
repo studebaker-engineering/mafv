@@ -28,8 +28,22 @@
             <tr>
               <th scope="row">
                 {% if item.image %}
+                  {% liquid
+                    assign image_loading = 'lazy'
+                    if forloop.index <= 4
+                      assign image_loading = 'eager'
+                    endif
+                    assign image_alt = item.image.alt | default: ''
+                  %}
                   <a href="{{ item.url }}" aria-label="{{ item.product.title | default: item.title | escape }}">
-                    {% render 'image', image: item.image, width: 200 %}
+                    {% render 'image',
+                      image: item.image,
+                      width: 288,
+                      widths: '96, 144, 192',
+                      sizes: '6rem',
+                      alt: image_alt,
+                      loading: image_loading
+                    %}
                   </a>
                 {% endif %}
                 <a href="{{ item.url }}">{{ item.product.title | default: item.title | escape }}</a>

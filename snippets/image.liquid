@@ -3,6 +3,8 @@
 
   When `width`, `height` and `crop` are provided, the image will be rendered
   with a fixed aspect ratio.
+  With responsive product candidates, a center crop uses a square bounded by
+  the shorter source edge.
 
   Serves as an example of how to use the `image_url` filter and `image_tag` filter
   as well as how you can use LiquidDoc to document your code.
@@ -13,6 +15,11 @@
   @param {number} [width] - The highest resolution width of the image to be rendered
   @param {number} [height] - The highest resolution height of the image to be rendered
   @param {string} [crop] - The crop position of the image
+  @param {string} [widths] - Comma-separated candidates for responsive product images
+  @param {string} [sizes] - The product image slot size for each viewport
+  @param {string} [alt] - Alternative text override, including an empty string
+  @param {string} [loading] - Loading behavior for responsive product images
+  @param {string} [fetchpriority] - Optional browser fetch priority
 
   @example
   {% render 'image', image: product.featured_image %}
@@ -45,7 +52,33 @@
     href="{{ url }}"
   {% endif %}
 >
-  {{ image | image_url: width: width, height: height, crop: crop | image_tag }}
+  {% if widths %}
+    {% liquid
+      assign width = width | at_most: image.width
+      if crop == 'center'
+        assign width = width | at_most: image.height
+        assign height = width
+      endif
+
+      assign candidates = widths | split: ','
+      capture responsive_widths
+        for candidate in candidates
+          assign candidate_width = candidate | plus: 0
+          if candidate_width < width
+            echo candidate_width
+            echo ','
+          endif
+        endfor
+        echo width
+      endcapture
+    %}
+    {{ image
+      | image_url: width: width, height: height, crop: crop
+      | image_tag: widths: responsive_widths, sizes: sizes, alt: alt, loading: loading, fetchpriority: fetchpriority
+    }}
+  {% else %}
+    {{ image | image_url: width: width, height: height, crop: crop | image_tag }}
+  {% endif %}
 </{{ wrapper }}>
 
 {% stylesheet %}
