@@ -168,6 +168,10 @@
 
 {% stylesheet %}
   @layer sections {
+    .cart-section {
+      padding: var(--section-space) var(--page-margin);
+    }
+
     .cart-form {
       display: grid;
       gap: var(--space-6);
@@ -267,6 +271,7 @@
 {% schema %}
 {
   "name": "t:general.cart",
+  "class": "cart-section",
   "settings": []
 }
 {% endschema %}

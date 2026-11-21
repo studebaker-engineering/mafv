@@ -54,11 +54,7 @@
     color: var(--color-on-accent);
   }
   .site-main > .shopify-section {
-    padding-block: var(--section-space);
     row-gap: var(--space-6);
-  }
-  .site-main > .shopify-section + .shopify-section {
-    padding-top: 0;
   }
   :is(.rte, .shopify-policy__body) {
     max-width: var(--reading-width);

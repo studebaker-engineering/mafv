@@ -1,110 +1,239 @@
-<header class="site-header">
+{% liquid
+  assign about_page = pages.about
+  assign about_url = routes.root_url | append: '/pages/about' | replace: '//', '/'
+  if about_page != blank
+    assign about_url = about_page.url
+  endif
+%}
+
+{% capture menu_links %}
+  {% for link in section.settings.menu.links %}
+    <a href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+  {% else %}
+    {% render 'header-default-links', shop_url: routes.all_products_collection_url, about_url: about_url %}
+  {% endfor %}
+{% endcapture %}
+
+<header class="site-header" data-site-header>
+  <button
+    class="header__menu-toggle"
+    type="button"
+    aria-label="{{ 'navigation.open_menu' | t | escape }}"
+    aria-haspopup="dialog"
+    aria-controls="HeaderMenu-{{ section.id }}"
+    data-header-menu-toggle
+    hidden
+  >
+    {{ 'icon-menu.svg' | inline_asset_content }}
+  </button>
+
+  <nav class="header__menu" aria-label="{{ 'accessibility.main_navigation' | t | escape }}">
+    {{ menu_links }}
+  </nav>
+
   <a class="header__brand" href="{{ routes.root_url }}">
     {%- if settings.logo != blank -%}
-      {{ settings.logo | image_url: width: 480 | image_tag: widths: '120, 160, 240, 320, 480', sizes: '(max-width: 40rem) 7.5rem, 10rem', alt: shop.name }}
+      {{
+        settings.logo
+        | image_url: width: 480
+        | image_tag: widths: '120, 160, 240, 320, 480', sizes: '(max-width: 40rem) 7.5rem, 10rem', alt: shop.name
+      }}
     {%- else -%}
       {{ shop.name | escape }}
     {%- endif -%}
   </a>
 
-  {% if section.settings.menu.links != blank %}
-    <nav class="header__menu" aria-label="{{ 'accessibility.main_navigation' | t }}">
-      {% for link in section.settings.menu.links %}
-        <a href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
-      {% endfor %}
+  <a class="header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'cart.title' | t | escape }}">
+    <span>{{ 'cart.title' | t }}</span>
+    {{ 'icon-cart.svg' | inline_asset_content }}
+  </a>
+
+  <dialog id="HeaderMenu-{{ section.id }}" class="header__drawer" aria-labelledby="HeaderMenuTitle-{{ section.id }}">
+    <div class="header__drawer-top">
+      <h2 id="HeaderMenuTitle-{{ section.id }}">{{ 'accessibility.main_navigation' | t }}</h2>
+      <form method="dialog">
+        <button type="submit" autofocus>{{ 'navigation.close_menu' | t }}</button>
+      </form>
+    </div>
+    <nav class="header__drawer-links" aria-labelledby="HeaderMenuTitle-{{ section.id }}">
+      {{ menu_links }}
     </nav>
-  {% endif %}
-
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <a href="{{ routes.account_url }}" aria-label="{{ 'accessibility.account' | t }}">{{ 'icon-account.svg' | inline_asset_content }}</a>
-    {% endif %}
-
-    <a href="{{ routes.cart_url }}" aria-label="{{ 'cart.title' | t }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
-  </div>
+  </dialog>
 </header>
 
 {% stylesheet %}
   @layer sections {
     .site-header {
-      display: flex;
-      flex-wrap: wrap;
+      --header-logo-width: 10rem;
+      --icon-stroke-width: 1.5;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) min(45%, var(--header-logo-width)) minmax(0, 1fr);
       align-items: center;
-      gap: var(--space-5);
-      padding-block: var(--space-5);
+      gap: var(--space-2) var(--space-3);
+      padding: var(--space-3) var(--page-margin);
       border-bottom: 1px solid var(--color-border);
     }
-    .header__brand {
-      display: inline-flex;
-      align-items: center;
-      min-width: 0;
-      min-height: var(--control-height);
-      max-width: 100%;
-      margin-inline-end: auto;
-      overflow-wrap: anywhere;
-      font-family: var(--font-heading);
-      font-weight: var(--weight-heading);
-      font-size: 1.25rem;
-      letter-spacing: -0.025em;
-    }
-    .header__brand img {
-      width: auto;
-      height: auto;
-      max-width: min(100%, 10rem);
-      max-height: 3rem;
-    }
+
     .site-header a {
       color: inherit;
       text-decoration: none;
     }
+
     .site-header a:hover {
       text-decoration: underline;
     }
-    .header__menu,
-    .header__icons {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-4);
-    }
+
+    .header__brand,
+    .header__cart,
     .header__menu a,
-    .header__icons a {
-      min-height: var(--control-height);
+    .header__drawer-links a {
       display: inline-flex;
       align-items: center;
+      min-height: var(--control-height);
     }
-    .header__menu {
-      font-size: var(--text-small);
-    }
-    .header__icons a {
-      position: relative;
-      gap: var(--space-1);
-      min-width: var(--control-height);
+
+    .header__brand {
+      grid-row: 1;
+      grid-column: 2;
+      justify-self: center;
       justify-content: center;
+      min-width: 0;
+      max-width: 100%;
+      text-align: center;
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: var(--weight-heading);
+      letter-spacing: -0.025em;
     }
-    .header__icons svg {
+
+    .header__brand img {
+      width: auto;
+      height: auto;
+      /* height: 3rem; */
+    }
+
+    .header__menu {
+      grid-row: 1;
+      grid-column: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 var(--space-4);
+      min-width: 0;
+    }
+
+    .header__menu-toggle,
+    .header__cart {
+      grid-row: 1;
+      min-width: var(--control-height);
+      min-height: var(--control-height);
+    }
+
+    .header__menu-toggle {
+      display: none;
+      grid-column: 1;
+      justify-self: start;
+      padding: var(--space-2);
+      border-color: transparent;
+      color: inherit;
+      background: transparent;
+    }
+
+    .header__cart {
+      grid-column: 3;
+      justify-self: end;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+
+    .header__menu-toggle svg,
+    .header__cart svg {
+      flex: none;
       width: 1.5rem;
       height: 1.5rem;
     }
-    .header__icons sup {
-      font-size: 0.75rem;
+
+    html:has(.header__drawer[open]),
+    body:has(.header__drawer[open]) {
+      overflow: hidden;
+      overscroll-behavior: none;
     }
+
+    .header__drawer {
+      position: fixed;
+      inset: 0 auto auto 0;
+      width: var(--header-drawer-width);
+      height: 100vh;
+      height: 100dvh;
+      max-width: 100%;
+      max-height: none;
+      margin: 0;
+      padding: max(var(--space-4), env(safe-area-inset-top)) var(--space-4)
+        max(var(--space-4), env(safe-area-inset-bottom)) max(var(--space-4), env(safe-area-inset-left));
+      border: 0;
+      background: var(--color-surface);
+      color: var(--color-text);
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+
+    .header__drawer:not([open]) {
+      display: none;
+    }
+
+    .header__drawer[open] {
+      animation: header-drawer-enter var(--transition-duration) ease-out;
+    }
+
+    @keyframes header-drawer-enter {
+      from {
+        transform: translateX(-100%);
+      }
+    }
+
+    .header__drawer::backdrop {
+      background: rgb(0 0 0 / 45%);
+    }
+
+    .header__drawer-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header__drawer-links {
+      display: grid;
+      justify-items: start;
+      padding-top: var(--space-3);
+    }
+
     @media (max-width: 40rem) {
+      .site-header {
+        --header-logo-width: 7.5rem;
+      }
+
       .header__brand img {
-        max-width: min(100%, 7.5rem);
         max-height: 2.5rem;
       }
+
+      .header__cart span {
+        display: none;
+      }
+
       .header__menu {
-        order: 3;
-        width: 100%;
-        border-top: 1px solid var(--color-border);
-        padding-top: var(--space-2);
+        grid-row: 2;
+        grid-column: 1 / -1;
+      }
+
+      [data-menu-ready] .header__menu {
+        display: none;
+      }
+
+      [data-menu-ready] .header__menu-toggle {
+        display: inline-flex;
       }
     }
   }

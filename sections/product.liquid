@@ -7,7 +7,7 @@
 
 <div class="product-layout">
   <div class="product-images">
-    {% assign image_sizes = '(min-width: 52rem) calc((min(80rem, 100vw) - clamp(2rem, 8vw, 6rem) - 4rem) * 6 / 11), calc(100vw - clamp(2rem, 8vw, 6rem))' %}
+    {% assign image_sizes = '(min-width: 52rem) calc((100vw - 4rem) * 6 / 11), 100vw' %}
     {% for image in product.images %}
       {% if image != blank %}
         {% liquid
@@ -174,6 +174,9 @@
       display: grid;
       gap: var(--space-5);
       min-width: 0;
+    }
+    .product-details {
+      padding: var(--space-5) var(--page-margin) var(--section-space);
     }
     .product-info > p {
       color: var(--color-muted);

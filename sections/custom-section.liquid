@@ -1,4 +1,4 @@
-<div class="custom-section full-width">
+<div class="custom-section">
   {% if section.settings.background_image %}
     <div class="custom-section__background">
       {{ section.settings.background_image | image_url: width: 2000 | image_tag }}
@@ -34,10 +34,7 @@
     }
     .custom-section__content {
       display: grid;
-      grid-template-columns: var(--content-grid);
-    }
-    .custom-section__content > * {
-      grid-column: 2;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 {% endstylesheet %}

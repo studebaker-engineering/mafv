@@ -1,0 +1,13 @@
+{% doc %}
+  Renders the default links when the header menu has no entries.
+
+  @param {string} shop_url - The all-products URL
+  @param {string} about_url - The About page URL
+{% enddoc %}
+
+<a href="{{ shop_url | escape }}"{% if request.path == shop_url %} aria-current="page"{% endif %}>
+  {{- 'navigation.shop' | t -}}
+</a>
+<a href="{{ about_url | escape }}"{% if request.path == about_url %} aria-current="page"{% endif %}>
+  {{- 'navigation.about' | t -}}
+</a>

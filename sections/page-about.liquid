@@ -10,7 +10,7 @@
       | image_tag:
         class: 'about-page__hero',
         widths: '400, 640, 960, 1200, 1600, 2000, 2400',
-        sizes: '(min-width: 80rem) 74rem, 92vw'
+        sizes: '100vw'
     }}
   {% endif %}
 
@@ -25,11 +25,13 @@
       display: grid;
       justify-items: center;
       gap: clamp(var(--space-6), 5vw, var(--space-8));
+      padding-block: var(--section-space);
       overflow-wrap: anywhere;
     }
 
     .about-page > h1 {
       max-width: 24ch;
+      padding-inline: var(--page-margin);
       text-align: center;
     }
 
@@ -42,6 +44,7 @@
     .about-page__story {
       width: min(100%, var(--reading-width));
       min-width: 0;
+      padding-inline: var(--page-margin);
     }
   }
 {% endstylesheet %}

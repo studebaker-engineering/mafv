@@ -83,6 +83,12 @@
     "quantity_cart_rule_error": "The total quantity of this variant must be at least {{ minimum }} and a multiple of {{ increment }}, or 0 to remove it.",
     "quantity_cart_limit_error": "You can have at most {{ quantity }} of this variant in your cart."
   },
+  "navigation": {
+    "shop": "Shop",
+    "about": "About",
+    "open_menu": "Open menu",
+    "close_menu": "Close"
+  },
   "accessibility": {
     "skip_to_content": "Skip to content",
     "footer_navigation": "Footer navigation",

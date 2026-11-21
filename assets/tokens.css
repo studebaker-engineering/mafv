@@ -27,11 +27,11 @@
     --space-6: 2rem;
     --space-7: 3rem;
     --space-8: 4rem;
-    --page-width: 80rem;
     --page-margin: clamp(1rem, 4vw, 3rem);
     --reading-width: 65ch;
     --section-space: clamp(2.5rem, 6vw, 5rem);
     --grid-gap: clamp(1rem, 3vw, 2rem);
+    --header-drawer-width: min(82vw, 22rem);
     --control-height: 2.75rem;
     --control-radius: 0.125rem;
     --focus-width: 2px;

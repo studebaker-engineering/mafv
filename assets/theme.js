@@ -56,3 +56,52 @@ for (const button of document.querySelectorAll("[data-variant-submit]")) {
 
 // Nonvisual marker for checking that the storefront script ran.
 document.documentElement.dataset.themeAssets = "loaded";
+
+const mobileHeader = window.matchMedia("(max-width: 40rem)");
+
+/** @param {ParentNode} root */
+function initializeHeaderMenus(root) {
+  for (const header of root.querySelectorAll("[data-site-header]")) {
+    if (header.hasAttribute("data-menu-ready")) continue;
+
+    const toggle = header.querySelector("[data-header-menu-toggle]");
+    const drawer = header.querySelector("dialog");
+    const firstLink = header.querySelector(".header__menu a");
+    if (!(toggle instanceof HTMLButtonElement) || !(drawer instanceof HTMLDialogElement)) continue;
+    if (typeof drawer.showModal !== "function") continue;
+
+    toggle.addEventListener("click", () => {
+      if (!mobileHeader.matches || drawer.open) return;
+
+      try {
+        drawer.showModal();
+      } catch {
+        header.removeAttribute("data-menu-ready");
+        toggle.hidden = true;
+        if (firstLink instanceof HTMLAnchorElement) firstLink.focus();
+      }
+    });
+
+    drawer.addEventListener("close", () => {
+      if (drawer.open) return;
+      const returnTarget = mobileHeader.matches ? toggle : firstLink;
+      if (returnTarget instanceof HTMLElement) returnTarget.focus({ preventScroll: true });
+    });
+
+    toggle.hidden = false;
+    header.setAttribute("data-menu-ready", "");
+  }
+}
+
+if (typeof HTMLDialogElement !== "undefined") {
+  initializeHeaderMenus(document);
+  mobileHeader.addEventListener("change", () => {
+    if (mobileHeader.matches) return;
+    for (const drawer of document.querySelectorAll(".header__drawer[open]")) {
+      if (drawer instanceof HTMLDialogElement) drawer.close();
+    }
+  });
+  document.addEventListener("shopify:section:load", (event) => {
+    if (event.target instanceof Element) initializeHeaderMenus(event.target);
+  });
+}

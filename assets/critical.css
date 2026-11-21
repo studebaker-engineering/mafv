@@ -61,23 +61,12 @@
     min-width: 0;
   }
   .shopify-section {
-    --content-width: min(
-      calc(var(--page-width) - var(--page-margin) * 2),
-      calc(100% - var(--page-margin) * 2)
-    );
-    --content-margin: minmax(var(--page-margin), 1fr);
-    --content-grid: var(--content-margin) minmax(0, var(--content-width))
-      var(--content-margin);
     display: grid;
-    grid-template-columns: var(--content-grid);
+    grid-template-columns: minmax(0, 1fr);
     position: relative;
     width: 100%;
   }
   .shopify-section > * {
-    grid-column: 2;
     min-width: 0;
-  }
-  .shopify-section > .full-width {
-    grid-column: 1 / -1;
   }
 }

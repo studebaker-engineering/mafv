@@ -21,11 +21,11 @@ The storefront and password layouts load shared CSS through `snippets/theme-asse
 
 Start with the six palette values in `tokens.css`: background `#FAFAF8`, surface `#FFFFFF`, text/accent `#1C1C1C`, muted `#666666`, border `#DEDEDA`. Set `--color-on-accent` with the accent so button text remains readable. Check contrast after changing colors.
 
-Change `--font-body` and `--font-heading`, heading sizes and weight, the spacing scale, page width and margins, control dimensions, and grid gap in the same file. Defaults use system fonts. Global theme settings cover brand images. The collection grid has its own section settings.
+Change `--font-body` and `--font-heading`, heading sizes and weight, the spacing scale, component insets, control dimensions, and grid gap in the same file. Defaults use system fonts. Global theme settings cover brand images. The collection grid has its own section settings.
 
 Shared card styles cover product, collection, and search cards without introducing a generic rendering framework. Rich text is scoped to `.rte` rather than adding margins to every paragraph globally. Product gallery images retain natural proportions; listing images use square crops. No carousel or new commerce feature was added.
 
-The product layout stacks before becoming two columns at 52rem. Navigation wraps on small screens; no menu script is required. Listing grids fit their available width. The cart keeps its semantic table inside a named, keyboard-focusable horizontal scroll region, followed by a full-width mobile summary. Disabled native controls keep their semantics. Focus outlines remain visible, and reduced-motion preferences disable the subtle control transitions.
+Sections span the viewport and own their internal spacing. The product layout stacks before becoming two columns at 52rem. At 40rem and below, the header uses a navigation drawer when JavaScript is available and a wrapping row of links otherwise. Adjust the pane with `--header-drawer-width`. Listing grids fit their available width. The cart keeps its semantic table inside a named, keyboard-focusable horizontal scroll region, followed by a full-width mobile summary. Disabled native controls keep their semantics. Focus outlines remain visible, and reduced-motion preferences disable the drawer animation and control transitions.
 
 The `hello-world` section renders a simple translated store introduction with the store name and catalog link. Update its translation copy for each client; templates retain their existing references.
 
