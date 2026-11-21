@@ -1,55 +1,181 @@
+{% liquid
+  assign menu_links = section.settings.menu.links
+  if section.settings.menu == blank
+    assign menu_links = linklists.footer.links | default: linklists['footer-menu'].links
+  endif
+  assign has_link_groups = false
+  for link in menu_links
+    if link.links != blank
+      assign has_link_groups = true
+      break
+    endif
+  endfor
+
+  assign brand_words = shop.name | split: ' '
+  assign longest_word = 1
+  for word in brand_words
+    assign longest_word = longest_word | at_least: word.size
+  endfor
+
+  assign store_name = shop.name | escape
+%}
+
 <footer class="site-footer">
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    <a href="{{ routes.root_url }}">{{ shop.name | escape }}</a>, {{ powered_by_link }}
+  <div class="footer__brand" style="--footer-word-length: {{ longest_word }}">
+    <p class="footer__wordmark">{{ store_name }}</p>
+    <p class="footer__copyright">
+      {{ 'footer.copyright' | t: store_name: shop.name | escape }}
+    </p>
   </div>
 
-  {% if section.settings.menu.links != blank %}
-    <nav class="footer__links" aria-label="{{ 'accessibility.footer_navigation' | t }}">
-      {% for link in section.settings.menu.links %}
-        <a href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
-      {% endfor %}
+  {% if menu_links != blank %}
+    <nav class="footer__links" aria-label="{{ 'accessibility.footer_navigation' | t | escape }}">
+      {% if has_link_groups %}
+        {% for group in menu_links %}
+          <div class="footer__group">
+            {% if group.links != blank %}
+              <h2 class="footer__heading">{{ group.title | escape }}</h2>
+              <ul class="footer__list" role="list">
+                {% for link in group.links %}
+                  <li>
+                    <a
+                      href="{{ link.url | escape }}"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{- link.title | escape -}}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <h2 class="footer__heading">
+                <a
+                  href="{{ group.url | escape }}"
+                  {% if group.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- group.title | escape -}}
+                </a>
+              </h2>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <ul class="footer__list footer__list--flat" role="list">
+          {% for link in menu_links %}
+            <li>
+              <a
+                href="{{ link.url | escape }}"
+                {% if link.current %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{- link.title | escape -}}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     </nav>
   {% endif %}
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
+  {% if section.settings.show_payment_icons %}
+    {% if shop.enabled_payment_types != blank %}
+      <div class="footer__payment">
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag }}
+        {% endfor %}
+      </div>
     {% endif %}
-  </div>
+  {% endif %}
 </footer>
 
 {% stylesheet %}
   @layer sections {
     .site-footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: start;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: end;
       gap: var(--space-6);
       padding: var(--space-7) var(--page-margin);
       border-top: 1px solid var(--color-border);
+      text-align: left;
       font-size: var(--text-small);
       color: var(--color-muted);
     }
-    .footer__links,
+
+    .footer__brand {
+      container-type: inline-size;
+    }
+
+    .footer__wordmark {
+      color: var(--color-text);
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-size: clamp(1rem, calc(140cqi / var(--footer-word-length)), 12rem);
+      font-weight: var(--weight-heading);
+      line-height: 1;
+    }
+
+    .footer__copyright {
+      margin-top: var(--space-2);
+    }
+
+    .footer__links {
+      display: grid;
+      grid-column: 2 / -1;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+      min-width: 0;
+    }
+
+    .footer__heading {
+      color: var(--color-text);
+      font-size: var(--text-body);
+      margin-bottom: var(--space-2);
+    }
+
+    .footer__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .footer__list--flat,
     .footer__payment {
+      grid-column: 1 / -1;
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
       gap: var(--space-3);
     }
+
     .footer__links a {
       display: inline-flex;
       min-height: var(--control-height);
       align-items: center;
     }
+
     .footer__payment svg {
       width: 2.25rem;
       height: auto;
+    }
+
+    @media (max-width: 40rem) {
+      .site-footer,
+      .footer__links {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .footer__links {
+        grid-column: 1 / -1;
+      }
+
+      .footer__list--flat {
+        display: block;
+      }
     }
   }
 {% endstylesheet %}

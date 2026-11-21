@@ -98,6 +98,9 @@
     "open_menu": "Open menu",
     "close_menu": "Close"
   },
+  "footer": {
+    "copyright": "©2026 {{ store_name }}"
+  },
   "accessibility": {
     "skip_to_content": "Skip to content",
     "footer_navigation": "Footer navigation",
