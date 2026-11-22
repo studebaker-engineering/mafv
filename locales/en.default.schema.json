@@ -41,6 +41,7 @@
     "background": "Background",
     "foreground": "Foreground",
     "favicon": "Favicon",
+    "footer_topper": "Footer illustration",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
     "hero_image": "Hero image",

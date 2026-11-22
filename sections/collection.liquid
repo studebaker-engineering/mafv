@@ -5,77 +5,103 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
 {% endcomment %}
 
-<h1>{{ collection.title | escape }}</h1>
-{% if collection.description != blank %}
-  <div class="rte">{{ collection.description }}</div>
-{% endif %}
+<section class="collection-section">
+  <h1 class="collection-title">{{ collection.title | escape }}</h1>
+  {% if collection.description != blank %}
+    <div class="rte">{{ collection.description }}</div>
+  {% endif %}
 
-<div class="collection-products">
-  {% assign image_sizes = '(min-width: 83rem) 19rem, (min-width: 65.935rem) calc((100vw - clamp(3rem, 9vw, 6rem)) / 4), (min-width: 47.873rem) calc((100vw - clamp(2rem, 6vw, 4rem)) / 3), (min-width: 31rem) calc((100vw - clamp(1rem, 3vw, 2rem)) / 2), 100vw' %}
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <article class="collection-product">
-        {% if product.featured_image %}
-          {% liquid
-            assign image_loading = 'lazy'
-            if forloop.index <= 4
-              assign image_loading = 'eager'
-            endif
-          %}
-          <a href="{{ product.url }}" aria-label="{{ product.title | escape }}">
-            {% render 'image',
-              class: 'collection-product__image',
-              image: product.featured_image,
-              width: 1536,
-              widths: '240, 320, 400, 480, 640, 768, 960, 1200',
-              sizes: image_sizes,
-              crop: 'center',
-              alt: product.featured_image.alt,
-              loading: image_loading
+  <div class="collection-products">
+    {% assign image_sizes = '(width > 40rem) calc((100vw - 2rem - clamp(3rem, 9vw, 6rem)) / 4), calc((100vw - 2rem - clamp(1rem, 3vw, 2rem)) / 2)' %}
+    {% paginate collection.products by 20 %}
+      {% for product in collection.products %}
+        <article class="collection-product">
+          {% if product.featured_image %}
+            {% liquid
+              assign image_loading = 'lazy'
+              if forloop.index <= 4
+                assign image_loading = 'eager'
+              endif
             %}
-          </a>
-        {% endif %}
-        <div class="collection-product__content">
-          <h2>
-            <a href="{{ product.url }}">{{ product.title | escape }}</a>
-          </h2>
-          <p>
-            {{ 'commerce.price' | t }}:
-            {% if product.price_varies %}
-              {% assign minimum_price = product.price_min | money %}
-              {% assign maximum_price = product.price_max | money %}
-              {{ 'commerce.price_range' | t: minimum: minimum_price, maximum: maximum_price }}
-            {% else %}
-              {{ product.price | money }}
-            {% endif %}
-          </p>
-          {% unless product.available %}
-            <p>{{ 'commerce.sold_out' | t }}</p>
-          {% endunless %}
-        </div>
-      </article>
-    {% else %}
-      <p>{{ 'collections.empty' | t }}</p>
-    {% endfor %}
+            <a href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+              {% render 'image',
+                class: 'collection-product__image',
+                image: product.featured_image,
+                width: 1536,
+                widths: '240, 320, 400, 480, 640, 768, 960, 1200',
+                sizes: image_sizes,
+                crop: 'center',
+                alt: product.featured_image.alt,
+                loading: image_loading
+              %}
+            </a>
+          {% endif %}
+          <div class="collection-product__content">
+            <h2>
+              <a href="{{ product.url }}" class="collection-product__title">{{ product.title | escape }}</a>
+            </h2>
+            <p>
+              {{ 'commerce.price' | t }}:
+              {% if product.price_varies %}
+                {% assign minimum_price = product.price_min | money %}
+                {% assign maximum_price = product.price_max | money %}
+                {{ 'commerce.price_range' | t: minimum: minimum_price, maximum: maximum_price }}
+              {% else %}
+                {{ product.price | money }}
+              {% endif %}
+            </p>
+            {% unless product.available %}
+              <p>{{ 'commerce.sold_out' | t }}</p>
+            {% endunless %}
+          </div>
+        </article>
+      {% else %}
+        <p>{{ 'collections.empty' | t }}</p>
+      {% endfor %}
 
-    {% if paginate.pages > 1 %}
-      <nav aria-label="{{ 'collections.pagination' | t }}">
-        {{ paginate | default_pagination }}
-      </nav>
-    {% endif %}
-  {% endpaginate %}
-</div>
+      {% if paginate.pages > 1 %}
+        <nav aria-label="{{ 'collections.pagination' | t }}">
+          {{ paginate | default_pagination }}
+        </nav>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</section>
 
 {% stylesheet %}
   @layer sections {
+    .collection-section {
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .collection-title {
+      margin-bottom: var(--space-4);
+    }
+
     .collection-products {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: var(--grid-gap);
     }
+
     .collection-products > nav,
     .collection-products > p {
       grid-column: 1 / -1;
+    }
+
+    .collection-product {
+      border: 2px dashed var(--color-border);
+      padding: 1rem;
+    }
+
+    .collection-product__title {
+      /* font-size: 1.25rem; */
+    }
+
+    @media (max-width: 40rem) {
+      .collection-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
   }
 {% endstylesheet %}

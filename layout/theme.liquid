@@ -12,6 +12,11 @@
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
 
+    {% # Type CDN %}
+    {% # theme-check-disable RemoteAsset %}
+    <link rel="stylesheet" href="https://use.typekit.net/xqr0abo.css">
+    {% # theme-check-enable RemoteAsset %}
+
     {{ content_for_header }}
   </head>
 

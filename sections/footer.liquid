@@ -18,6 +18,7 @@
   endfor
 
   assign store_name = shop.name | escape
+  assign footer_topper = section.settings.footer_topper | default: images['Footer_Topper.png']
 %}
 
 <footer class="site-footer">
@@ -93,18 +94,35 @@
   {% endif %}
 </footer>
 
+{% if footer_topper != blank %}
+  {% assign topper_width = footer_topper.width | at_most: 3840 %}
+  {{
+    footer_topper
+    | image_url: width: topper_width
+    | image_tag: class: 'footer__topper', sizes: '100vw', loading: 'lazy', alt: 'Illustration of friends'
+  }}
+{% endif %}
+
 {% stylesheet %}
   @layer sections {
+    .footer__topper {
+      display: block;
+      height: auto;
+      width: 100%;
+      margin-top: -3rem;
+    }
+
     .site-footer {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      align-items: end;
+      align-items: top;
       gap: var(--space-6);
-      padding: var(--space-7) var(--page-margin);
-      border-top: 1px solid var(--color-border);
+      padding: var(--space-6) var(--space-4);
+      background-color: var(--color-background);
       text-align: left;
       font-size: var(--text-small);
-      color: var(--color-muted);
+      color: var(--color-text);
+      border-top: 2px var(--color-border) dashed;
     }
 
     .footer__brand {
@@ -112,10 +130,9 @@
     }
 
     .footer__wordmark {
-      color: var(--color-text);
       font-family: var(--font-heading);
       font-size: 2rem;
-      font-size: clamp(1rem, calc(140cqi / var(--footer-word-length)), 12rem);
+      font-size: clamp(1rem, calc(140cqi / var(--footer-word-length)), 5rem);
       font-weight: var(--weight-heading);
       line-height: 1;
     }
@@ -133,8 +150,7 @@
     }
 
     .footer__heading {
-      color: var(--color-text);
-      font-size: var(--text-body);
+      font-size: 1.25rem;
       margin-bottom: var(--space-2);
     }
 
@@ -156,6 +172,7 @@
       display: inline-flex;
       min-height: var(--control-height);
       align-items: center;
+      text-decoration: none;
     }
 
     .footer__payment svg {
@@ -167,6 +184,10 @@
       .site-footer,
       .footer__links {
         grid-template-columns: minmax(0, 1fr);
+      }
+
+      .footer__wordmark {
+        font-size: 2rem;
       }
 
       .footer__links {
@@ -184,6 +205,11 @@
 {
   "name": "t:general.footer",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "footer_topper",
+      "label": "t:labels.footer_topper"
+    },
     {
       "type": "link_list",
       "id": "menu",

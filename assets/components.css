@@ -74,7 +74,6 @@
     .search-result__image
   ) {
     aspect-ratio: 1;
-    background: var(--color-surface);
   }
   :is(
       .collection-product__image,
