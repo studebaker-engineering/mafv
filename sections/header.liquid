@@ -64,14 +64,14 @@
 {% stylesheet %}
   @layer sections {
     .site-header {
-      --header-logo-width: 10rem;
+      --header-logo-width: 8rem;
       --icon-stroke-width: 1.5;
       display: grid;
       grid-template-columns: minmax(0, 1fr) min(45%, var(--header-logo-width)) minmax(0, 1fr);
       align-items: center;
       gap: var(--space-2) var(--space-3);
-      padding: var(--space-3) var(--page-margin);
-      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-1) var(--space-6);
+      border-bottom: 2px solid var(--color-border);
     }
 
     .site-header a {
@@ -89,7 +89,7 @@
     .header__drawer-links a {
       display: inline-flex;
       align-items: center;
-      min-height: var(--control-height);
+      font-size: 1.25rem;
     }
 
     .header__brand {
@@ -104,12 +104,6 @@
       font-size: 1.25rem;
       font-weight: var(--weight-heading);
       letter-spacing: -0.025em;
-    }
-
-    .header__brand img {
-      width: auto;
-      height: auto;
-      /* height: 3rem; */
     }
 
     .header__menu {
@@ -170,7 +164,7 @@
       padding: max(var(--space-4), env(safe-area-inset-top)) var(--space-4)
         max(var(--space-4), env(safe-area-inset-bottom)) max(var(--space-4), env(safe-area-inset-left));
       border: 0;
-      background: var(--color-surface);
+      background: var(--color-background);
       color: var(--color-text);
       overflow: auto;
       overscroll-behavior: contain;

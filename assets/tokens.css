@@ -2,15 +2,17 @@
 @layer tokens {
   :root {
     --theme-assets-loaded: 1;
-    --color-background: #fcfcfc;
-    --color-surface: #ffffff;
+    --color-background: #ffffff;
+    --color-surface: #2b2b2b;
     --color-text: #2b2b2b;
     --color-muted: #666666;
     --color-border: #2b2b2b;
-    --color-accent: #1c1c1c;
+    --color-accent: #a0b47c;
     --color-on-accent: #ffffff;
-    --font-body: helvetica-lt-pro, sans-serif;
-    --font-heading: cooper-black-std, serif;
+    --font-cooper: cooper-black-std, serif;
+    --font-helvetica: helvetica-lt-pro, sans-serif;
+    --font-body: var(--font-helvetica);
+    --font-heading: var(--font-cooper);
     --text-small: 0.875rem;
     --text-body: 1rem;
     --text-title: clamp(2rem, 1.4rem + 2vw, 3.5rem);

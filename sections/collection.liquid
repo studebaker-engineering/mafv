@@ -71,7 +71,7 @@
 {% stylesheet %}
   @layer sections {
     .collection-section {
-      padding: var(--space-6) var(--space-4);
+      padding: var(--space-6) var(--space-5);
     }
 
     .collection-title {
@@ -80,7 +80,7 @@
 
     .collection-products {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--grid-gap);
     }
 
@@ -90,12 +90,7 @@
     }
 
     .collection-product {
-      border: 2px dashed var(--color-border);
       padding: 1rem;
-    }
-
-    .collection-product__title {
-      /* font-size: 1.25rem; */
     }
 
     @media (max-width: 40rem) {
