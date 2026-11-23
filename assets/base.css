@@ -84,6 +84,16 @@
   }
 }
 
+@font-face {
+  font-family: "Brush Script MT";
+  size-adjust: 140%;
+  src: url("https://media.studebaker.engineering/fonts/Brush%20Script.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Shopify supplies unlayered styles for its native policy wrapper. */
 .site-main .shopify-policy__container {
   width: calc(100% - 2 * var(--page-margin));

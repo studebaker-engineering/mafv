@@ -6,10 +6,12 @@
 {% endcomment %}
 
 <section class="collection-section">
-  <h1 class="collection-title">{{ collection.title | escape }}</h1>
-  {% if collection.description != blank %}
-    <div class="rte">{{ collection.description }}</div>
-  {% endif %}
+  <div class="collection-title__container">
+    <h1 class="collection-title">{{ collection.title | escape }}</h1>
+    {% if collection.description != blank %}
+      <div class="rte">{{ collection.description }}</div>
+    {% endif %}
+  </div>
 
   <div class="collection-products">
     {% assign image_sizes = '(width > 40rem) calc((100vw - 2rem - clamp(3rem, 9vw, 6rem)) / 4), calc((100vw - 2rem - clamp(1rem, 3vw, 2rem)) / 2)' %}
@@ -23,7 +25,7 @@
                 assign image_loading = 'eager'
               endif
             %}
-            <a href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+            <a class="collection-product__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
               {% render 'image',
                 class: 'collection-product__image',
                 image: product.featured_image,
@@ -35,6 +37,8 @@
                 loading: image_loading
               %}
             </a>
+          {% else %}
+            <div class="collection-product__media" aria-hidden="true"></div>
           {% endif %}
           <div class="collection-product__content">
             <h2>
@@ -70,18 +74,34 @@
 
 {% stylesheet %}
   @layer sections {
-    .collection-section {
-      padding: var(--space-6) var(--space-5);
+    .collection-title__container {
+      padding: var(--space-1) var(--space-6);
+      border-bottom: 2px solid var(--color-border);
+      height: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      /* background-color: var(--color-accent); */
     }
 
     .collection-title {
-      margin-bottom: var(--space-4);
+      font-size: 1.25rem;
+      font-family: var(--font-brush);
+      line-height: 0;
     }
 
     .collection-products {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--grid-gap);
+      overflow: hidden;
+      padding: 2rem;
+      background-color: var(--color-accent);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .collection-product__media {
+      display: block;
+      aspect-ratio: 1;
     }
 
     .collection-products > nav,
@@ -90,12 +110,52 @@
     }
 
     .collection-product {
-      padding: 1rem;
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border-block-end: 2px solid var(--color-border);
+      padding: 0.5rem 2rem 0rem;
+      background-color: var(--color-background);
+    }
+
+    .collection-product::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-inline-end: 2px solid var(--color-border);
+      pointer-events: none;
+    }
+
+    @media (width > 40rem) {
+      .collection-product:nth-child(-n + 3)::after {
+        border-block-start: 2px solid var(--color-border);
+      }
+
+      .collection-product:nth-child(3n)::after {
+        border-inline-end: 2px solid var(--color-border);
+      }
+
+      .collection-product:nth-child(3n + 1)::after {
+        border-inline-start: 2px solid var(--color-border);
+      }
     }
 
     @media (max-width: 40rem) {
       .collection-products {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 1rem;
+      }
+
+      .collection-product:nth-child(-n + 2)::after {
+        border-block-start: 2px solid var(--color-border);
+      }
+
+      .collection-product:nth-child(2n + 1)::after {
+        border-inline-start: 2px solid var(--color-border);
+      }
+
+      .collection-product:nth-child(2n)::after {
+        border-inline-end: 2px solid var(--color-border);
       }
     }
   }

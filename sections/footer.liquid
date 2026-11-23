@@ -36,6 +36,7 @@
           <div class="footer__group">
             {% if group.links != blank %}
               <h2 class="footer__heading">{{ group.title | escape }}</h2>
+              <hr class="footer__heading__divider" />
               <ul class="footer__list" role="list">
                 {% for link in group.links %}
                   <li>
@@ -129,15 +130,17 @@
     }
 
     .footer__wordmark {
-      font-family: var(--font-heading);
-      font-size: 2rem;
+      font-family: var(--font-cooper);
       font-size: clamp(1rem, calc(140cqi / var(--footer-word-length)), 5rem);
-      font-weight: var(--weight-heading);
       line-height: 1;
     }
 
     .footer__copyright {
-      margin-top: var(--space-2);
+      font-weight: bold;
+      width: fit-content;
+      padding: 0 var(--space-2);
+      background-color: var(--color-accent);
+      border: 2px solid var(--color-border);
     }
 
     .footer__links {
@@ -150,7 +153,15 @@
 
     .footer__heading {
       font-size: 1.25rem;
-      margin-bottom: var(--space-2);
+    }
+
+    .footer__heading__divider {
+      width: 66%;
+      margin-left: 0px;
+      height: 2px;
+      border: none;
+      background-color: var(--color-border);
+      margin-top: 0.5rem;
     }
 
     .footer__list {
@@ -169,9 +180,16 @@
 
     .footer__links a {
       display: inline-flex;
-      min-height: var(--control-height);
-      align-items: center;
       text-decoration: none;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .footer__links a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-decoration-color: var(--color-border);
+      text-underline-offset: 1px;
     }
 
     .footer__payment svg {
@@ -186,7 +204,7 @@
       }
 
       .footer__wordmark {
-        font-size: 2rem;
+        font-size: 5rem;
       }
 
       .footer__links {

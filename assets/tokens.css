@@ -11,10 +11,12 @@
     --color-on-accent: #ffffff;
     --font-cooper: cooper-black-std, serif;
     --font-helvetica: helvetica-lt-pro, sans-serif;
+    --font-brush: "Brush Script MT", sans-serif;
     --font-body: var(--font-helvetica);
-    --font-heading: var(--font-cooper);
+    --font-heading: var(--font-brush);
     --text-small: 0.875rem;
     --text-body: 1rem;
+    --text-large: 1.275rem;
     --text-title: clamp(2rem, 1.4rem + 2vw, 3.5rem);
     --text-heading: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
     --leading-body: 1.6;

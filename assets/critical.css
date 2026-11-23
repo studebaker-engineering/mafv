@@ -50,6 +50,7 @@
     display: none !important;
   }
 }
+
 @layer base {
   body {
     min-height: 100svh;
