@@ -11,30 +11,35 @@
     }}
   {% endif %}
 
-  {% if page.content != blank %}
-    <div class="about-page__story rte">
-      <p>
-        What is <span class="mafv-text">MAFV</span>? How do you even pronounce it? Well, bucko, it’s pronounced
-        <span class="double-underline">"MAV"</span> (just forget the F). <span class="mafv-text">MAFV</span> is me,
-        Rylan. <span class="mafv-text">MAFV</span> came about when I was in high school, it was a simple graffiti tag,
-        and I just really enjoyed how the letters looked together. It wasn’t much more than that, until I graduated.
-      </p>
+  {% assign portrait_url = 'rylan.png' | asset_url %}
+  <div class="about-page__portraits">
+    <img src="{{ portrait_url }}" alt="" width="1000" height="800">
 
-      <p>
-        A very dear and special friend of mine saw how special <span class="mafv-text">MAFV</span> really was, and
-        wanted to pursue this art dream with me. <span class="mafv-text">MAFV</span> kept evolving in its own unique way
-        over the years. I was constantly searching for new colors, new shapes, and new characters to tie it all
-        together. My goal was always to make something new, something no one’s ever seen before, something solely from
-        my imagination. And that’s when <span class="mafv-text">MAFV</span> really bloomed.
-      </p>
+    {% if page.content != blank %}
+      <div class="about-page__story rte">
+        <p>
+          What is <span class="mafv-text">MAFV</span>? How do you even pronounce it? Well, bucko, it’s pronounced
+          <span class="double-underline">"MAV"</span> (just forget the F). <span class="mafv-text">MAFV</span> is me,
+          Rylan. <span class="mafv-text">MAFV</span> came about when I was in high school, it was a simple graffiti tag,
+          and I just really enjoyed how the letters looked together. It wasn’t much more than that, until I graduated.
+        </p>
 
-      <p>
-        <span class="mafv-text">MAFV</span> isn’t about following trends or fitting in. It’s about pure imaginative
-        freedom, expression, and vibrancy.
-      </p>
-    </div>
-    {% comment %} <div class="about-page__story rte">{{ page.content }}</div> {% endcomment %}
-  {% endif %}
+        <p>
+          A very dear and special friend of mine saw how special <span class="mafv-text">MAFV</span> really was, and
+          wanted to pursue this art dream with me. <span class="mafv-text">MAFV</span> kept evolving in its own unique
+          way over the years. I was constantly searching for new colors, new shapes, and new characters to tie it all
+          together. My goal was always to make something new, something no one’s ever seen before, something solely from
+          my imagination. And that’s when <span class="mafv-text">MAFV</span> really bloomed.
+        </p>
+
+        <p>
+          <span class="mafv-text">MAFV</span> isn’t about following trends or fitting in. It’s about pure imaginative
+          freedom, expression, and vibrancy.
+        </p>
+      </div>
+      {% comment %} <div class="about-page__story rte">{{ page.content }}</div> {% endcomment %}
+    {% endif %}
+  </div>
 </article>
 
 {% stylesheet %}
@@ -43,13 +48,13 @@
       display: grid;
       justify-items: center;
       padding-block: var(--section-space);
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
       background-color: var(--color-accent);
       border-bottom: 2px solid var(--color-border);
       padding: 1.5rem;
     }
 
-    /* .about-page::after {
+    .about-page::after {
       content: '';
       position: fixed;
       inset: 0;
@@ -57,19 +62,29 @@
       opacity: 0.2;
       pointer-events: none;
       z-index: 1;
-    } */
+    }
 
     .about-page > h1 {
-      text-align: left;
       width: 100%;
-      /* -webkit-text-stroke: 5px var(--color-background);
-      paint-order: stroke fill; */
     }
 
     .about-page__hero {
       width: 100%;
       aspect-ratio: 16 / 9;
       object-fit: cover;
+    }
+
+    .about-page__portraits {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: min(100%, 2000px);
+      margin: 1rem 0;
+      gap: 2rem;
+    }
+
+    .about-page__portraits > img {
+      border: 2px dashed var(--color-border);
+      background-color: var(--color-accent-2);
     }
 
     .about-page__story > p {
