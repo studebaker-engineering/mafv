@@ -45,7 +45,7 @@
 
   <a class="header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'cart.title' | t | escape }}">
     <span>{{ 'cart.title' | t }}</span>
-    {{ 'icon-cart.svg' | inline_asset_content }}
+    {% comment %} {{ 'icon-cart.svg' | inline_asset_content }} {% endcomment %}
   </a>
 
   <dialog id="HeaderMenu-{{ section.id }}" class="header__drawer" aria-labelledby="HeaderMenuTitle-{{ section.id }}">
@@ -64,7 +64,7 @@
 {% stylesheet %}
   @layer sections {
     .site-header {
-      --header-logo-width: 6rem;
+      --header-logo-width: 8rem;
       --icon-stroke-width: 1.5;
       display: grid;
       grid-template-columns: minmax(0, 1fr) min(45%, var(--header-logo-width)) minmax(0, 1fr);
@@ -80,7 +80,8 @@
       text-decoration: none;
     }
 
-    .site-header a:hover {
+    .site-header a:hover,
+    .site-header a[aria-current='page'] {
       text-decoration: underline;
     }
 
@@ -91,6 +92,15 @@
       display: inline-flex;
       align-items: center;
       font-size: 1.25rem;
+    }
+
+    .header__menu a,
+    .header__cart {
+      -webkit-text-stroke: 2px var(--color-border);
+      background-color: var(--color-accent);
+      height: 2.5rem;
+      padding: 0 1rem;
+      border: 2px dashed var(--color-border);
     }
 
     .header__brand {

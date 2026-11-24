@@ -49,7 +49,6 @@
       justify-items: center;
       padding-block: var(--section-space);
       overflow-wrap: break-word;
-      background-color: var(--color-accent);
       border-bottom: 2px solid var(--color-border);
       padding: 1.5rem;
     }
@@ -66,6 +65,10 @@
 
     .about-page > h1 {
       width: 100%;
+      /* color: var(--color-yellow); */
+      -webkit-text-stroke: 2px var(--color-border);
+      paint-order: stroke fill;
+      font-size: 4rem;
     }
 
     .about-page__hero {
@@ -87,9 +90,18 @@
       background-color: var(--color-accent-2);
     }
 
+    .about-page__story {
+      background-color: var(--color-background);
+      border: 2px dashed var(--color-border);
+      padding: 1rem;
+      margin-top: -2rem;
+      rotate: 2deg;
+    }
+
     .about-page__story > p {
       font-size: 1.5rem;
       -webkit-text-stroke: 1.5px currentColor;
+      text-indent: 0.75em;
     }
 
     .mafv-text {
