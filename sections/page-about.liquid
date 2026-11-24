@@ -7,15 +7,33 @@
     {{
       hero_image
       | image_url: width: 2400
-      | image_tag:
-        class: 'about-page__hero',
-        widths: '400, 640, 960, 1200, 1600, 2000, 2400',
-        sizes: '100vw'
+      | image_tag: class: 'about-page__hero', widths: '400, 640, 960, 1200, 1600, 2000, 2400', sizes: '100vw'
     }}
   {% endif %}
 
   {% if page.content != blank %}
-    <div class="about-page__story rte">{{ page.content }}</div>
+    <div class="about-page__story rte">
+      <p>
+        What is <span class="mafv-text">MAFV</span>? How do you even pronounce it? Well, bucko, it’s pronounced
+        <span class="double-underline">"MAV"</span> (just forget the F). <span class="mafv-text">MAFV</span> is me,
+        Rylan. <span class="mafv-text">MAFV</span> came about when I was in high school, it was a simple graffiti tag,
+        and I just really enjoyed how the letters looked together. It wasn’t much more than that, until I graduated.
+      </p>
+
+      <p>
+        A very dear and special friend of mine saw how special <span class="mafv-text">MAFV</span> really was, and
+        wanted to pursue this art dream with me. <span class="mafv-text">MAFV</span> kept evolving in its own unique way
+        over the years. I was constantly searching for new colors, new shapes, and new characters to tie it all
+        together. My goal was always to make something new, something no one’s ever seen before, something solely from
+        my imagination. And that’s when <span class="mafv-text">MAFV</span> really bloomed.
+      </p>
+
+      <p>
+        <span class="mafv-text">MAFV</span> isn’t about following trends or fitting in. It’s about pure imaginative
+        freedom, expression, and vibrancy.
+      </p>
+    </div>
+    {% comment %} <div class="about-page__story rte">{{ page.content }}</div> {% endcomment %}
   {% endif %}
 </article>
 
@@ -24,15 +42,28 @@
     .about-page {
       display: grid;
       justify-items: center;
-      gap: clamp(var(--space-6), 5vw, var(--space-8));
       padding-block: var(--section-space);
       overflow-wrap: anywhere;
+      background-color: var(--color-accent);
+      border-bottom: 2px solid var(--color-border);
+      padding: 1.5rem;
     }
 
+    /* .about-page::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='10' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 1;
+    } */
+
     .about-page > h1 {
-      max-width: 24ch;
-      padding-inline: var(--page-margin);
-      text-align: center;
+      text-align: left;
+      width: 100%;
+      /* -webkit-text-stroke: 5px var(--color-background);
+      paint-order: stroke fill; */
     }
 
     .about-page__hero {
@@ -41,10 +72,20 @@
       object-fit: cover;
     }
 
-    .about-page__story {
-      width: min(100%, var(--reading-width));
-      min-width: 0;
-      padding-inline: var(--page-margin);
+    .about-page__story > p {
+      font-size: 1.5rem;
+      -webkit-text-stroke: 1.5px currentColor;
+    }
+
+    .mafv-text {
+      font-family: var(--font-cooper);
+      -webkit-text-stroke-width: 0px;
+    }
+
+    .double-underline {
+      font-weight: bold;
+      /* text-decoration: underline dashed var(--color-border) 3px;
+      text-underline-offset: 4px; */
     }
   }
 {% endstylesheet %}
