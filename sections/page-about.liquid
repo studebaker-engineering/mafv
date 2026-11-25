@@ -12,8 +12,11 @@
   {% endif %}
 
   {% assign portrait_url = 'rylan.png' | asset_url %}
+  {% assign about_illustration_url = 'about-illustration.png' | asset_url %}
   <div class="about-page__portraits">
-    <img src="{{ portrait_url }}" alt="" width="1000" height="800">
+    <img src="{{ portrait_url }}" alt="" width="1000" height="800" class="about-page__portrait" />
+
+    <img src="{{ about_illustration_url }}" alt="" width="800" height="1000" class="about-page__illustration" />
 
     {% if page.content != blank %}
       <div class="about-page__story rte">
@@ -50,7 +53,7 @@
       padding-block: var(--section-space);
       overflow-wrap: break-word;
       border-bottom: 2px solid var(--color-border);
-      padding: 1.5rem;
+      padding: 1.5rem 1.5rem 5rem 1.5rem;
     }
 
     .about-page::after {
@@ -85,20 +88,45 @@
       gap: 2rem;
     }
 
-    .about-page__portraits > img {
+    .about-page__portrait {
       border: 2px dashed var(--color-border);
       background-color: var(--color-accent-2);
     }
 
+    .about-page__illustration {
+      border: 2px dashed var(--color-border);
+      background-color: var(--color-accent);
+      position: absolute;
+      z-index: -1;
+      height: 90%;
+      width: auto;
+      right: 30%;
+      top: 5%;
+      rotate: -2deg;
+    }
+
     .about-page__story {
-      background-color: var(--color-background);
+      position: relative;
+      overflow: hidden; /* Clips the blurred edges so they don't bleed outside the dashed border */
+      background-color: #ffe27a;
       border: 2px dashed var(--color-border);
       padding: 1rem;
       margin-top: -2rem;
-      rotate: 2deg;
+      rotate: 0deg;
+      height: fit-content;
+    }
+
+    .about-page__story::before {
+      content: '';
+      position: absolute;
+      inset: -10px; /* Expands the gradient past the edges to prevent transparent/washed-out blur borders */
+      background: radial-gradient(50% 50% at 50% 50%, #ff4500 0%, #ff0080 45%, #ffd700 67%, #ffe27a 100%);
+      filter: blur(80px);
+      z-index: -1;
     }
 
     .about-page__story > p {
+      position: relative; /* Ensures text stays sharply above the pseudo-element */
       font-size: 1.5rem;
       -webkit-text-stroke: 1.5px currentColor;
       text-indent: 0.75em;
@@ -111,8 +139,6 @@
 
     .double-underline {
       font-weight: bold;
-      /* text-decoration: underline dashed var(--color-border) 3px;
-      text-underline-offset: 4px; */
     }
   }
 {% endstylesheet %}
