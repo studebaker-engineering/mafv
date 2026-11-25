@@ -20,25 +20,32 @@
 
     {% if page.content != blank %}
       <div class="about-page__story rte">
-        <p>
-          What is <span class="mafv-text">MAFV</span>? How do you even pronounce it? Well, bucko, it’s pronounced
-          <span class="double-underline">"MAV"</span> (just forget the F). <span class="mafv-text">MAFV</span> is me,
-          Rylan. <span class="mafv-text">MAFV</span> came about when I was in high school, it was a simple graffiti tag,
-          and I just really enjoyed how the letters looked together. It wasn’t much more than that, until I graduated.
-        </p>
+        <div class="about-page__story-box">
+          <p>
+            What is <span class="mafv-text">MAFV</span>? How do you even pronounce it? Well, bucko, it’s pronounced
+            <span class="double-underline">"MAV"</span> (just forget the F). <span class="mafv-text">MAFV</span> is me,
+            Rylan. <span class="mafv-text">MAFV</span> came about when I was in high school, it was a simple graffiti
+            tag, and I just really enjoyed how the letters looked together. It wasn’t much more than that, until I
+            graduated.
+          </p>
+        </div>
 
-        <p>
-          A very dear and special friend of mine saw how special <span class="mafv-text">MAFV</span> really was, and
-          wanted to pursue this art dream with me. <span class="mafv-text">MAFV</span> kept evolving in its own unique
-          way over the years. I was constantly searching for new colors, new shapes, and new characters to tie it all
-          together. My goal was always to make something new, something no one’s ever seen before, something solely from
-          my imagination. And that’s when <span class="mafv-text">MAFV</span> really bloomed.
-        </p>
+        <div class="about-page__story-box" style="rotate: -1deg">
+          <p>
+            A very dear and special friend of mine saw how special <span class="mafv-text">MAFV</span> really was, and
+            wanted to pursue this art dream with me. <span class="mafv-text">MAFV</span> kept evolving in its own unique
+            way over the years. I was constantly searching for new colors, new shapes, and new characters to tie it all
+            together. My goal was always to make something new, something no one’s ever seen before, something solely
+            from my imagination. And that’s when <span class="mafv-text">MAFV</span> really bloomed.
+          </p>
+        </div>
 
-        <p>
-          <span class="mafv-text">MAFV</span> isn’t about following trends or fitting in. It’s about pure imaginative
-          freedom, expression, and vibrancy.
-        </p>
+        <div class="about-page__story-box">
+          <p>
+            <span class="mafv-text">MAFV</span> isn’t about following trends or fitting in. It’s about pure imaginative
+            freedom, expression, and vibrancy.
+          </p>
+        </div>
       </div>
       {% comment %} <div class="about-page__story rte">{{ page.content }}</div> {% endcomment %}
     {% endif %}
@@ -68,7 +75,6 @@
 
     .about-page > h1 {
       width: 100%;
-      /* color: var(--color-yellow); */
       -webkit-text-stroke: 2px var(--color-border);
       paint-order: stroke fill;
       font-size: 4rem;
@@ -84,7 +90,6 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       width: min(100%, 2000px);
-      margin: 1rem 0;
       gap: 2rem;
     }
 
@@ -107,38 +112,70 @@
 
     .about-page__story {
       position: relative;
-      overflow: hidden; /* Clips the blurred edges so they don't bleed outside the dashed border */
-      background-color: #ffe27a;
-      border: 2px dashed var(--color-border);
-      padding: 1rem;
       margin-top: -2rem;
       rotate: 0deg;
       height: fit-content;
     }
 
-    .about-page__story::before {
-      content: '';
-      position: absolute;
-      inset: -10px; /* Expands the gradient past the edges to prevent transparent/washed-out blur borders */
-      background: radial-gradient(50% 50% at 50% 50%, #ff4500 0%, #ff0080 45%, #ffd700 67%, #ffe27a 100%);
-      filter: blur(80px);
-      z-index: -1;
+    .about-page__story-box {
+      border: 2px dashed var(--color-border);
     }
 
-    .about-page__story > p {
-      position: relative; /* Ensures text stays sharply above the pseudo-element */
+    .about-page__story-box > p {
+      background-color: #ffe27a;
+      clip-path: inset(0);
+      margin: 0;
+      padding: 1rem 1rem 1.5rem;
       font-size: 1.5rem;
       -webkit-text-stroke: 1.5px currentColor;
       text-indent: 0.75em;
     }
 
+    .about-page__story-box > p::before {
+      content: '';
+      position: absolute;
+      /* Size the gradient to the story and clip it to each paragraph. */
+      inset: -10px;
+      background: radial-gradient(50% 50% at 50% 50%, #ff4500 0%, #ff0000 65%, #ffd700 83%, #ffe27a 100%);
+      filter: blur(90px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
     .mafv-text {
       font-family: var(--font-cooper);
-      -webkit-text-stroke-width: 0px;
     }
 
     .double-underline {
       font-weight: bold;
+    }
+
+    @media (max-width: 1024px) {
+      .about-page__portraits {
+        margin-top: 1.5rem;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .about-page__illustration {
+        height: 75%;
+        width: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        rotate: 0deg;
+      }
+
+      .about-page__story {
+        position: relative;
+        margin-top: 0rem;
+        rotate: 0deg;
+        height: fit-content;
+      }
+
+      .about-page__story-box > p {
+        font-size: 1rem;
+      }
     }
   }
 {% endstylesheet %}

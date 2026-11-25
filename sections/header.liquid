@@ -64,15 +64,15 @@
 {% stylesheet %}
   @layer sections {
     .site-header {
-      --header-logo-width: 8rem;
+      --header-logo-width: 9rem;
       --icon-stroke-width: 1.5;
       display: grid;
       grid-template-columns: minmax(0, 1fr) min(45%, var(--header-logo-width)) minmax(0, 1fr);
       align-items: center;
       gap: var(--space-2) var(--space-3);
       padding: var(--space-1) var(--space-6);
-      border-top: 2px solid var(--color-border);
-      border-bottom: 2px solid var(--color-border);
+      border: 2px solid var(--color-border);
+      margin: 0.25rem;
     }
 
     .site-header a {
