@@ -1,7 +1,7 @@
 {% assign hero_image = section.settings.hero_image %}
 
 <article class="about-page">
-  <h1>{{ page.title | escape }}</h1>
+  <h1 class="about-page__title overprint-text">{{ page.title | escape }}</h1>
 
   {% if hero_image != blank %}
     {{
@@ -13,41 +13,15 @@
 
   {% assign portrait_url = 'rylan.png' | asset_url %}
   {% assign about_illustration_url = 'about-illustration.png' | asset_url %}
-  <div class="about-page__portraits">
+  <div class="about-page__grid">
     <img src="{{ portrait_url }}" alt="" width="1000" height="800" class="about-page__portrait" />
 
     <img src="{{ about_illustration_url }}" alt="" width="800" height="1000" class="about-page__illustration" />
 
     {% if page.content != blank %}
       <div class="about-page__story rte">
-        <div class="about-page__story-box">
-          <p>
-            What is <span class="mafv-text">MAFV</span>? How do you even pronounce it? Well, bucko, it’s pronounced
-            <span class="double-underline">"MAV"</span> (just forget the F). <span class="mafv-text">MAFV</span> is me,
-            Rylan. <span class="mafv-text">MAFV</span> came about when I was in high school, it was a simple graffiti
-            tag, and I just really enjoyed how the letters looked together. It wasn’t much more than that, until I
-            graduated.
-          </p>
-        </div>
-
-        <div class="about-page__story-box" style="rotate: -1deg">
-          <p>
-            A very dear and special friend of mine saw how special <span class="mafv-text">MAFV</span> really was, and
-            wanted to pursue this art dream with me. <span class="mafv-text">MAFV</span> kept evolving in its own unique
-            way over the years. I was constantly searching for new colors, new shapes, and new characters to tie it all
-            together. My goal was always to make something new, something no one’s ever seen before, something solely
-            from my imagination. And that’s when <span class="mafv-text">MAFV</span> really bloomed.
-          </p>
-        </div>
-
-        <div class="about-page__story-box">
-          <p>
-            <span class="mafv-text">MAFV</span> isn’t about following trends or fitting in. It’s about pure imaginative
-            freedom, expression, and vibrancy.
-          </p>
-        </div>
+        {{ page.content }}
       </div>
-      {% comment %} <div class="about-page__story rte">{{ page.content }}</div> {% endcomment %}
     {% endif %}
   </div>
 </article>
@@ -60,7 +34,7 @@
       padding-block: var(--section-space);
       overflow-wrap: break-word;
       border-bottom: 2px solid var(--color-border);
-      padding: 1.5rem 1.5rem 5rem 1.5rem;
+      padding: 1.5rem 1.5rem 5rem;
     }
 
     .about-page::after {
@@ -73,10 +47,8 @@
       z-index: 1;
     }
 
-    .about-page > h1 {
+    .about-page__title {
       width: 100%;
-      -webkit-text-stroke: 2px var(--color-border);
-      paint-order: stroke fill;
       font-size: 4rem;
     }
 
@@ -86,7 +58,7 @@
       object-fit: cover;
     }
 
-    .about-page__portraits {
+    .about-page__grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       width: min(100%, 2000px);
@@ -122,7 +94,7 @@
     }
 
     .about-page__story-box > p {
-      background-color: #ffe27a;
+      background-color: var(--color-yellow);
       clip-path: inset(0);
       margin: 0;
       padding: 1rem 1rem 1.5rem;
@@ -136,22 +108,20 @@
       position: absolute;
       /* Size the gradient to the story and clip it to each paragraph. */
       inset: -10px;
-      background: radial-gradient(50% 50% at 50% 50%, #ff4500 0%, #ff0000 65%, #ffd700 83%, #ffe27a 100%);
+      background: radial-gradient(
+        50% 50% at 50% 50%,
+        var(--color-red) 0%,
+        var(--color-red-bold) 65%,
+        var(--color-yellow-bold) 83%,
+        var(--color-yellow) 100%
+      );
       filter: blur(90px);
       z-index: -1;
       pointer-events: none;
     }
 
-    .mafv-text {
-      font-family: var(--font-cooper);
-    }
-
-    .double-underline {
-      font-weight: bold;
-    }
-
     @media (max-width: 1024px) {
-      .about-page__portraits {
+      .about-page__grid {
         margin-top: 1.5rem;
         grid-template-columns: repeat(1, minmax(0, 1fr));
         gap: 1rem;
