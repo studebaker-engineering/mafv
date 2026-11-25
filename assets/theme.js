@@ -41,19 +41,6 @@ document.addEventListener("submit", (event) => {
   if (!form.reportValidity()) event.preventDefault();
 });
 
-// Reload the variant-specific Liquid constraints through the native GET form.
-document.addEventListener("change", (event) => {
-  const selector = event.target;
-  if (!(selector instanceof HTMLSelectElement)) return;
-  if (!selector.matches("[data-variant-selector]")) return;
-  selector.form?.requestSubmit();
-});
-
-// The native submit button remains available until enhancement has loaded.
-for (const button of document.querySelectorAll("[data-variant-submit]")) {
-  if (button instanceof HTMLButtonElement) button.hidden = true;
-}
-
 // Nonvisual marker for checking that the storefront script ran.
 document.documentElement.dataset.themeAssets = "loaded";
 

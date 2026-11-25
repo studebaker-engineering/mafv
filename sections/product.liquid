@@ -7,7 +7,7 @@
 
 <div class="product-layout">
   <div class="product-images">
-    {% assign image_sizes = '(min-width: 52rem) calc((100vw - 4rem) * 6 / 11), 100vw' %}
+    {% assign image_sizes = '(min-width: 52rem) calc(30vw - 1.7rem), calc((100vw - 1rem) / 2)' %}
     {% for image in product.images %}
       {% if image != blank %}
         {% liquid
@@ -37,20 +37,22 @@
 
   <div class="product-details">
     <div class="product-info">
-      <h1>{{ product.title | escape }}</h1>
-      <p>
-        {{ 'commerce.price' | t }}:
-        {% if product.price_varies %}
-          {% assign minimum_price = product.price_min | money %}
-          {% assign maximum_price = product.price_max | money %}
-          {{ 'commerce.price_range' | t: minimum: minimum_price, maximum: maximum_price }}
-        {% else %}
-          {{ product.price | money }}
-        {% endif %}
-      </p>
-      {% unless product.available %}
-        <p>{{ 'commerce.sold_out' | t }}</p>
-      {% endunless %}
+      <h1 class="overprint-text">{{ product.title | escape }}</h1>
+      <div class="product-status-tags">
+        <p class="product-price overprint-text">
+          {% if product.price_varies %}
+            {% assign minimum_price = product.price_min | money %}
+            {% assign maximum_price = product.price_max | money %}
+            {{ 'commerce.price_range' | t: minimum: minimum_price, maximum: maximum_price }}
+          {% else %}
+            {{ product.price | money }}
+          {% endif %}
+        </p>
+        {% unless product.available %}
+          <p class="overprint-text product-sold-out">{{ 'commerce.sold_out' | t }}</p>
+        {% endunless %}
+      </div>
+
       <div class="rte">{{ product.description }}</div>
     </div>
 
@@ -75,28 +77,38 @@
           endif
         endif
       %}
-      <form action="{{ product.url }}" method="get" data-variant-form>
-        <label for="ProductVariant-{{ section.id }}">{{ 'commerce.variant' | t }}</label>
-        <select
-          id="ProductVariant-{{ section.id }}"
-          name="variant"
-          data-variant-selector
-          aria-describedby="ProductVariantHelp-{{ section.id }}"
-        >
-          {% for variant in product.variants %}
-            <option
-              value="{{ variant.id }}"
-              {% if variant == current_variant %}
-                selected="selected"
-              {% endif %}
-            >
-              {{ variant.title | escape }} - {{ variant.price | money }}
-              {% unless variant.available %} - {{ 'commerce.sold_out' | t }}{% endunless %}
-            </option>
-          {% endfor %}
-        </select>
-        <p id="ProductVariantHelp-{{ section.id }}">{{ 'commerce.variant_reload' | t }}</p>
-        <button type="submit" data-variant-submit>{{ 'commerce.select_variant' | t }}</button>
+      <form action="{{ product.url }}" method="get" aria-labelledby="ProductVariant-{{ section.id }}">
+        <span id="ProductVariant-{{ section.id }}">{{ 'commerce.variant' | t | escape }}</span>
+        {% paginate product.variants by 250 %}
+          <div class="product-variants">
+            {% for variant in product.variants %}
+              <button
+                class="product-variant"
+                type="submit"
+                name="variant"
+                value="{{ variant.id }}"
+                {% if variant == current_variant %}
+                  aria-current="true"
+                {% endif %}
+                {% unless variant.available %}
+                  disabled
+                {% endunless %}
+              >
+                <span>{{ variant.title | escape }}</span>
+                <span>{{ variant.price | money }}</span>
+                {% unless variant.available %}
+                  <span>{{ 'commerce.sold_out' | t | escape }}</span>
+                {% endunless %}
+              </button>
+            {% endfor %}
+          </div>
+          {% if paginate.pages > 1 %}
+            <input type="hidden" name="{{ paginate.page_param | escape }}" value="{{ paginate.current_page }}">
+            <nav class="pagination" aria-label="{{ 'commerce.variant_pagination' | t | escape }}">
+              {{ paginate | default_pagination }}
+            </nav>
+          {% endif %}
+        {% endpaginate %}
       </form>
 
       {% form 'product', product %}
@@ -142,7 +154,7 @@
             disabled
           {% endunless %}
         >
-          {% if product.available %}
+          {% if current_variant.available %}
             {{ 'commerce.add_to_cart' | t }}
           {% else %}
             {{ 'commerce.sold_out' | t }}
@@ -160,27 +172,50 @@
   @layer sections {
     .product-layout {
       display: grid;
-      gap: var(--space-7);
+      gap: var(--space-2);
       align-items: start;
     }
+
     .product-images {
       display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-4);
+      align-items: start;
+    }
+
+    .product-status-tags {
+      display: flex;
+      gap: var(--space-2);
     }
 
     .product-details,
     .product-info,
     .product-form {
       display: grid;
-      gap: var(--space-5);
+      gap: var(--space-4);
       min-width: 0;
     }
+
     .product-details {
-      padding: var(--space-5) var(--page-margin) var(--section-space);
+      padding: var(--space-5);
     }
-    .product-info > p {
-      color: var(--color-muted);
+
+    .product-price,
+    .product-sold-out {
+      font-size: 1.25rem;
+      width: fit-content;
+      padding: 0 0.5rem;
+      border: 2px dashed var(--color-border);
     }
+
+    .product-price {
+      /* background-color: var(--color-accent-2); */
+    }
+
+    .product-sold-out {
+      background-color: var(--color-red);
+    }
+
     .product-form form {
       display: grid;
       gap: var(--space-3);
@@ -200,12 +235,41 @@
       width: 100%;
       margin-top: var(--space-3);
     }
-    .product-form [data-variant-submit] {
-      justify-self: start;
+    .product-variants {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .product-variant {
+      width: min(7rem, 100%);
+      aspect-ratio: 1;
+      flex-direction: column;
+      gap: var(--space-1);
+      padding: var(--space-2);
+      overflow-wrap: anywhere;
+      border-color: var(--color-muted);
+      border-radius: 0;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+    .product-variant:hover:enabled,
+    .product-variant[aria-current='true'] {
+      border-color: var(--color-text);
+      background: var(--color-accent);
+      color: var(--color-text);
+    }
+    .product-variant[aria-current='true'] {
+      box-shadow: inset 0 0 0 1px var(--color-text);
+    }
+    .product-variant:disabled {
+      background: color-mix(in srgb, var(--color-muted) 12%, var(--color-surface));
+      color: var(--color-muted);
+      opacity: 1;
+      cursor: not-allowed;
     }
     @media (min-width: 52rem) {
       .product-layout {
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
         gap: var(--space-8);
       }
     }
