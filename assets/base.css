@@ -2,6 +2,7 @@
   html {
     color-scheme: light;
   }
+
   body {
     font-family: var(--font-body);
     font-size: var(--text-body);
@@ -9,74 +10,93 @@
     background: var(--color-background);
     color: var(--color-text);
   }
+
   :where(h1, h2, h3, h4, h5, h6) {
     font-family: var(--font-heading);
     font-weight: var(--weight-heading);
     line-height: var(--leading-heading);
     text-wrap: balance;
   }
+
   h1 {
     font-size: var(--text-title);
     letter-spacing: -0.035em;
   }
+
   h2 {
     font-size: var(--text-heading);
     letter-spacing: -0.025em;
   }
+
   h3 {
     font-size: 1.25rem;
   }
+
   :where(h4, h5, h6) {
     font-size: 1rem;
   }
+
   :where(p, h1, h2, h3, h4, h5, h6, a, dd) {
     overflow-wrap: anywhere;
   }
+
   a {
     color: inherit;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 1px;
   }
+
   a:hover {
     text-decoration-thickness: 2px;
   }
+
   :focus-visible {
     outline: var(--focus-width) solid var(--color-accent);
     outline-offset: 4px;
   }
+
   :where(button, input, select, textarea):disabled,
   [aria-disabled="true"] {
     opacity: 0.5;
     cursor: not-allowed;
   }
+
   ::selection {
     background: var(--color-accent);
     color: var(--color-on-accent);
   }
-  .site-main > .shopify-section {
+
+  .site-main>.shopify-section {
     row-gap: var(--space-6);
   }
+
   :is(.rte, .shopify-policy__body) {
     max-width: var(--reading-width);
   }
-  :is(.rte, .shopify-policy__body) > * + * {
+
+  :is(.rte, .shopify-policy__body)>*+* {
     margin-block-start: var(--space-4);
   }
+
   :is(.rte, .shopify-policy__body) :where(h2, h3) {
     margin-block-start: var(--space-7);
   }
+
   :is(.rte, .shopify-policy__body) :where(ul, ol) {
     padding-inline-start: 1.5em;
   }
+
   :is(.rte, .shopify-policy__body) :where(blockquote) {
     border-inline-start: 2px solid var(--color-border);
     padding-inline-start: var(--space-5);
     color: var(--color-muted);
   }
+
   :is(.rte, .shopify-policy__body) table {
     display: block;
     overflow-x: auto;
   }
+
   @media (prefers-reduced-motion: reduce) {
     :root {
       --transition-duration: 0ms;
@@ -87,8 +107,7 @@
 @font-face {
   font-family: "Brush Script MT";
   size-adjust: 140%;
-  src: url("https://media.studebaker.engineering/fonts/Brush%20Script.woff2")
-    format("woff2");
+  src: url("https://media.studebaker.engineering/fonts/Brush%20Script.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
